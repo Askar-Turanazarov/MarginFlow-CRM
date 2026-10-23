@@ -1,0 +1,233 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum Locale {
+  ru
+  en
+  uz
+}
+
+enum EmployeeStatus {
+  OFF_DUTY
+  OUT_OF_OFFICE
+  IN_OFFICE
+}
+
+enum ExitReason {
+  LUNCH
+  CLIENT_VISIT
+  MEETING
+  PERSONAL
+  OTHER
+}
+
+enum AttendanceEventType {
+  CHECK_IN
+  EXIT
+  RETURN
+  END_OF_DAY
+}
+
+enum RequestStatus {
+  NEW
+  ASSIGNED
+  IN_PROGRESS
+  DONE
+}
+
+enum ZoneKind {
+  KITCHEN
+  MEETING_ROOM
+  LOUNGE
+  RECEPTION
+  OTHER
+}
+
+model User {
+  id           String   @id @default(cuid())
+  login        String   @unique
+  passwordHash String
+  role         Role     @default(EMPLOYEE)
+  locale       Locale   @default(en)
+  isActive     Boolean  @default(true)
+  employeeId   String   @unique
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  createdEvents AttendanceEvent[] @relation("EventCreatedBy")
+  editedEvents  AttendanceEvent[] @relation("EventEditedBy")
+}
+
+model Employee {
+  id                String         @id @default(cuid())
+  firstName         String
+  lastName          String
+  position          String
+  phone             String?
+  email             String?
+  avatarUrl         String?
+  deskId            String?        @unique
+  desk              Desk?          @relation(fields: [deskId], references: [id], onDelete: SetNull)
+  status            EmployeeStatus @default(OFF_DUTY)
+  currentExitReason ExitReason?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+
+  user     User?
+  workDays WorkDay[]
+  requests Request[]
+}
+
+// x, y — center of the desk as a share (0..1) of the plan image width/height,
+// so desks stay in place at any display size.
+model Desk {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  pcNumber  String?   @unique
+  x         Float
+  y         Float
+  employee  Employee?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Client {
+  id          String    @id @default(cuid())
+  companyName String
+  contactName String
+  phone       String?
+  email       String?
+  city        String?
+  address     String?
+  lat         Float?
+  lng         Float?
+  notes       String?
+  requests    Request[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Request {
+  id          String            @id @default(cuid())
+  clientId    String
+  client      Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  status      RequestStatus     @default(NEW)
+  assigneeId  String?
+  assignee    Employee?         @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  dueDate     DateTime?         @db.Date
+  events      AttendanceEvent[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+// Rectangle on the plan, all values are shares (0..1) of the image size.
+model Zone {
+  id        String   @id @default(cuid())
+  name      String
+  kind      ZoneKind @default(OTHER)
+  x         Float
+  y         Float
+  width     Float
+  height    Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Single row (id = 1). No image — the built-in test plan /office-plan-demo.svg is shown.
+model OfficePlan {
+  id        Int      @id @default(1)
+  image     Bytes?
+  mimeType  String?
+  updatedAt DateTime @updatedAt
+}
+
+model WorkDay {
+  id          String            @id @default(cuid())
+  employeeId  String
+  employee    Employee          @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date        DateTime          @db.Date
+  checkInAt   DateTime
+  checkOutAt  DateTime?
+  isLate      Boolean           @default(false)
+  lateMinutes Int               @default(0)
+  closed      Boolean           @default(false)
+  autoClosed  Boolean           @default(false)
+  events      AttendanceEvent[]
+  locations   LocationPoint[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([employeeId, date])
+}
+
+model AttendanceEvent {
+  id          String              @id @default(cuid())
+  workDayId   String
+  workDay     WorkDay             @relation(fields: [workDayId], references: [id], onDelete: Cascade)
+  type        AttendanceEventType
+  reason      ExitReason?
+  requestId   String?
+  request     Request?            @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  comment     String?
+  at          DateTime
+  createdById String
+  createdBy   User                @relation("EventCreatedBy", fields: [createdById], references: [id])
+  editedById  String?
+  editedBy    User?               @relation("EventEditedBy", fields: [editedById], references: [id])
+  editReason  String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@index([workDayId, at])
+}
+
+model LocationPoint {
+  id        String   @id @default(cuid())
+  workDayId String
+  workDay   WorkDay  @relation(fields: [workDayId], references: [id], onDelete: Cascade)
+  lat       Float
+  lng       Float
+  accuracy  Float
+  at        DateTime
+  createdAt DateTime @default(now())
+
+  @@index([workDayId, at])
+}
+
+model OfficeSettings {
+  id                      Int      @id @default(1)
+  workdayStart            String   @default("09:00")
+  lateGraceMinutes        Int      @default(5)
+  timezone                String   @default("America/Los_Angeles")
+  officeName              String   @default("MarginFlow HQ")
+  officeAddress           String   @default("")
+  officeLat               Float    @default(37.4419)
+  officeLng               Float    @default(-122.143)
+  locationIntervalMinutes Int      @default(5)
+  locationRetentionDays   Int      @default(90)
+  updatedAt               DateTime @updatedAt
+}
+
+model AgentToken {
+  id         String    @id @default(cuid())
+  name       String
+  tokenHash  String    @unique
+  lastUsedAt DateTime?
+  revokedAt  DateTime?
+  createdAt  DateTime  @default(now())
+}

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+<!-- MarginFlow demo office plan (fictional). Desks and zones are placed over it by the app. -->
+<style>
+.floor{fill:#f7f7f5}.wall{fill:none;stroke:#3f3f46;stroke-width:10;stroke-linecap:square}
+.inner{fill:none;stroke:#52525b;stroke-width:6}.desk{fill:#e7e5e4;stroke:#a8a29e;stroke-width:2}
+.pc{fill:#a1a1aa}.chair{fill:#d6d3d1;stroke:#a8a29e;stroke-width:2}.furn{fill:#e7e5e4;stroke:#a8a29e;stroke-width:2}
+.door{fill:none;stroke:#a1a1aa;stroke-width:2;stroke-dasharray:6 5}
+</style>
+<rect x="20" y="20" width="1160" height="760" class="floor"/>
+<!-- outer walls with entrance gap bottom-right -->
+<path d="M20 20 H1180 V780 H1100 M1000 780 H20 V20" class="wall"/>
+<path d="M1000 780 A100 100 0 0 1 1100 680" class="door"/>
+<!-- left rooms: meeting room, lounge, kitchen -->
+<path d="M380 20 V200 M380 270 V420 M380 490 V640 M380 710 V780" class="inner"/>
+<path d="M20 300 H380 M20 520 H380" class="inner"/>
+<!-- meeting room furniture -->
+<ellipse cx="200" cy="160" rx="120" ry="55" class="furn"/>
+<circle cx="100" cy="85" r="13" class="chair"/><circle cx="100" cy="235" r="13" class="chair"/><circle cx="150" cy="85" r="13" class="chair"/><circle cx="150" cy="235" r="13" class="chair"/><circle cx="200" cy="85" r="13" class="chair"/><circle cx="200" cy="235" r="13" class="chair"/><circle cx="250" cy="85" r="13" class="chair"/><circle cx="250" cy="235" r="13" class="chair"/><circle cx="300" cy="85" r="13" class="chair"/><circle cx="300" cy="235" r="13" class="chair"/>
+<rect x="40" y="40" width="10" height="90" class="pc"/>
+<!-- lounge -->
+<rect x="45" y="330" width="60" height="160" rx="12" class="furn"/>
+<rect x="45" y="460" width="200" height="40" rx="12" class="furn"/>
+<rect x="160" y="360" width="90" height="60" rx="30" class="furn"/>
+<circle cx="320" cy="350" r="22" fill="#bbf7d0" stroke="#86efac" stroke-width="2"/>
+<!-- kitchen -->
+<rect x="40" y="540" width="60" height="220" class="furn"/>
+<rect x="100" y="720" width="260" height="40" class="furn"/>
+<circle cx="230" cy="620" r="40" class="furn"/>
+<circle cx="230" cy="565" r="12" class="chair"/><circle cx="230" cy="675" r="12" class="chair"/><circle cx="175" cy="620" r="12" class="chair"/><circle cx="285" cy="620" r="12" class="chair"/>
+<!-- open space desks -->
+<rect x="445" y="102" width="110" height="56" rx="6" class="desk"/><rect x="482" y="108" width="36" height="10" rx="2" class="pc"/><circle cx="500" cy="174" r="13" class="chair"/><rect x="585" y="102" width="110" height="56" rx="6" class="desk"/><rect x="622" y="108" width="36" height="10" rx="2" class="pc"/><circle cx="640" cy="174" r="13" class="chair"/><rect x="725" y="102" width="110" height="56" rx="6" class="desk"/><rect x="762" y="108" width="36" height="10" rx="2" class="pc"/><circle cx="780" cy="174" r="13" class="chair"/><rect x="865" y="102" width="110" height="56" rx="6" class="desk"/><rect x="902" y="108" width="36" height="10" rx="2" class="pc"/><circle cx="920" cy="174" r="13" class="chair"/><rect x="1005" y="102" width="110" height="56" rx="6" class="desk"/><rect x="1042" y="108" width="36" height="10" rx="2" class="pc"/><circle cx="1060" cy="174" r="13" class="chair"/><rect x="445" y="262" width="110" height="56" rx="6" class="desk"/><rect x="482" y="268" width="36" height="10" rx="2" class="pc"/><circle cx="500" cy="246" r="13" class="chair"/><rect x="585" y="262" width="110" height="56" rx="6" class="desk"/><rect x="622" y="268" width="36" height="10" rx="2" class="pc"/><circle cx="640" cy="246" r="13" class="chair"/><rect x="725" y="262" width="110" height="56" rx="6" class="desk"/><rect x="762" y="268" width="36" height="10" rx="2" class="pc"/><circle cx="780" cy="246" r="13" class="chair"/><rect x="865" y="262" width="110" height="56" rx="6" class="desk"/><rect x="902" y="268" width="36" height="10" rx="2" class="pc"/><circle cx="920" cy="246" r="13" class="chair"/><rect x="1005" y="262" width="110" height="56" rx="6" class="desk"/><rect x="1042" y="268" width="36" height="10" rx="2" class="pc"/><circle cx="1060" cy="246" r="13" class="chair"/><rect x="445" y="482" width="110" height="56" rx="6" class="desk"/><rect x="482" y="488" width="36" height="10" rx="2" class="pc"/><circle cx="500" cy="554" r="13" class="chair"/><rect x="585" y="482" width="110" height="56" rx="6" class="desk"/><rect x="622" y="488" width="36" height="10" rx="2" class="pc"/><circle cx="640" cy="554" r="13" class="chair"/><rect x="725" y="482" width="110" height="56" rx="6" class="desk"/><rect x="762" y="488" width="36" height="10" rx="2" class="pc"/><circle cx="780" cy="554" r="13" class="chair"/><rect x="865" y="482" width="110" height="56" rx="6" class="desk"/><rect x="902" y="488" width="36" height="10" rx="2" class="pc"/><circle cx="920" cy="554" r="13" class="chair"/><rect x="1005" y="482" width="110" height="56" rx="6" class="desk"/><rect x="1042" y="488" width="36" height="10" rx="2" class="pc"/><circle cx="1060" cy="554" r="13" class="chair"/><rect x="445" y="642" width="110" height="56" rx="6" class="desk"/><rect x="482" y="648" width="36" height="10" rx="2" class="pc"/><circle cx="500" cy="626" r="13" class="chair"/><rect x="585" y="642" width="110" height="56" rx="6" class="desk"/><rect x="622" y="648" width="36" height="10" rx="2" class="pc"/><circle cx="640" cy="626" r="13" class="chair"/><rect x="725" y="642" width="110" height="56" rx="6" class="desk"/><rect x="762" y="648" width="36" height="10" rx="2" class="pc"/><circle cx="780" cy="626" r="13" class="chair"/><rect x="865" y="642" width="110" height="56" rx="6" class="desk"/><rect x="902" y="648" width="36" height="10" rx="2" class="pc"/><circle cx="920" cy="626" r="13" class="chair"/><rect x="1005" y="642" width="110" height="56" rx="6" class="desk"/><rect x="1042" y="648" width="36" height="10" rx="2" class="pc"/><circle cx="1060" cy="626" r="13" class="chair"/>
+</svg>

@@ -1,0 +1,56 @@
+# Dependencies
+node_modules/
+
+# Next.js / build
+.next/
+out/
+build/
+dist/
+next-env.d.ts
+*.tsbuildinfo
+
+# Secrets (keep only .env.example)
+.env
+.env.*
+!.env.example
+
+# Not part of the project: AI / notes / plans / logs
+.claude/
+tasks/
+CLAUDE.md
+CLAUDE.local.md
+AGENTS.md
+
+# Scripts and tests
+scripts/
+tests/
+test/
+e2e/
+__tests__/
+*.test.*
+*.spec.*
+coverage/
+playwright-report/
+test-results/
+
+# Generated reports
+exports/
+*.xlsx
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Local DB
+.pgdata/
+*.db
+*.sqlite
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
