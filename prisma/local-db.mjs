@@ -1,5 +1,5 @@
 // Local PostgreSQL without Docker (binaries from the embedded-postgres package).
-//   npm run db:start  — start in background (creates .pgdata on first run)
+//   npm run db:start  — start in background (creates .pgdata on first run); also runs before `npm run dev`
 //   npm run db:stop   — stop
 // pg_ctl is used instead of running postgres directly: it also works from an admin Windows account.
 import "dotenv/config";
@@ -37,6 +37,13 @@ if (!fs.existsSync(dataDir)) {
     fs.rmSync(pwFile, { force: true });
   }
 }
+
+// Already running (e.g. second `npm run dev`) — nothing to do. pg_ctl status exits non-zero when stopped.
+try {
+  execFileSync(pg_ctl, ["status", "-D", dataDir], { stdio: "ignore" });
+  console.log(`PostgreSQL is already running on port ${port}.`);
+  process.exit(0);
+} catch {}
 
 // stdio "ignore": the server inherits handles, a pipe would keep this command hanging. Logs go to server.log.
 const logFile = path.join(dataDir, "server.log");
