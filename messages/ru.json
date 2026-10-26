@@ -11,7 +11,8 @@
     "clients": "Клиенты",
     "requests": "Заявки",
     "officePlan": "План офиса",
-    "map": "Карта"
+    "map": "Карта",
+    "reports": "Отчёты"
   },
   "roles": {
     "ADMIN": "Администратор",
@@ -272,5 +273,42 @@
     "MEETING": "Встреча",
     "PERSONAL": "Личное",
     "OTHER": "Другое"
+  },
+  "reports": {
+    "title": "Отчёты",
+    "attendanceTitle": "Посещаемость",
+    "attendanceHint": "Выберите период: в Excel-файле два листа — «Сводка» и «По дням».",
+    "from": "С",
+    "to": "По",
+    "download": "Скачать отчёт в Excel"
+  },
+  "report": {
+    "sheetSummary": "Сводка",
+    "sheetDays": "По дням",
+    "titleSummary": "Сводка посещаемости",
+    "titleDays": "Посещаемость по дням",
+    "period": "Период: {from} — {to}",
+    "employee": "Сотрудник",
+    "position": "Должность",
+    "daysWorked": "Дней на работе",
+    "lateCount": "Опозданий",
+    "lateMinutesTotal": "Опоздание, мин всего",
+    "hoursInOffice": "В офисе (ч:мм)",
+    "hoursOutside": "Вне офиса (ч:мм)",
+    "total": "Итого",
+    "date": "Дата",
+    "checkIn": "Приход",
+    "checkOut": "Уход",
+    "lateMinutes": "Опоздание, мин",
+    "exits": "Выходы",
+    "stillWorking": "на работе",
+    "noData": "За этот период рабочих дней нет.",
+    "reason": {
+      "LUNCH": "Обед",
+      "CLIENT_VISIT": "Выезд к клиенту",
+      "MEETING": "Встреча",
+      "PERSONAL": "Личное",
+      "OTHER": "Другое"
+    }
   }
 }

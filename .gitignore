@@ -36,6 +36,7 @@ test-results/
 # Generated reports
 exports/
 *.xlsx
+!src/app/api/reports/attendance.xlsx/
 
 # Logs
 *.log

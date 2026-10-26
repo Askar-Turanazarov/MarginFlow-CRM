@@ -11,7 +11,8 @@
     "clients": "Clients",
     "requests": "Requests",
     "officePlan": "Office plan",
-    "map": "Map"
+    "map": "Map",
+    "reports": "Reports"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -272,5 +273,42 @@
     "MEETING": "Meeting",
     "PERSONAL": "Personal",
     "OTHER": "Other"
+  },
+  "reports": {
+    "title": "Reports",
+    "attendanceTitle": "Attendance",
+    "attendanceHint": "Choose the period: the Excel file has two sheets, Summary and By day.",
+    "from": "From",
+    "to": "To",
+    "download": "Download Excel report"
+  },
+  "report": {
+    "sheetSummary": "Summary",
+    "sheetDays": "By day",
+    "titleSummary": "Attendance summary",
+    "titleDays": "Attendance by day",
+    "period": "Period: {from} — {to}",
+    "employee": "Employee",
+    "position": "Position",
+    "daysWorked": "Days at work",
+    "lateCount": "Times late",
+    "lateMinutesTotal": "Late, min total",
+    "hoursInOffice": "In office (h:mm)",
+    "hoursOutside": "Outside (h:mm)",
+    "total": "Total",
+    "date": "Date",
+    "checkIn": "Check-in",
+    "checkOut": "Left",
+    "lateMinutes": "Late, min",
+    "exits": "Exits",
+    "stillWorking": "at work",
+    "noData": "No workdays in this period.",
+    "reason": {
+      "LUNCH": "Lunch",
+      "CLIENT_VISIT": "Client visit",
+      "MEETING": "Meeting",
+      "PERSONAL": "Personal",
+      "OTHER": "Other"
+    }
   }
 }

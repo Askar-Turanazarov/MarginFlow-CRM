@@ -11,7 +11,8 @@
     "clients": "Mijozlar",
     "requests": "Arizalar",
     "officePlan": "Ofis rejasi",
-    "map": "Xarita"
+    "map": "Xarita",
+    "reports": "Hisobotlar"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -272,5 +273,42 @@
     "MEETING": "Uchrashuv",
     "PERSONAL": "Shaxsiy",
     "OTHER": "Boshqa"
+  },
+  "reports": {
+    "title": "Hisobotlar",
+    "attendanceTitle": "Davomat",
+    "attendanceHint": "Davrni tanlang: Excel faylida ikki varaq bor — «Umumiy» va «Kunlar boʻyicha».",
+    "from": "Dan",
+    "to": "Gacha",
+    "download": "Excel hisobotini yuklab olish"
+  },
+  "report": {
+    "sheetSummary": "Umumiy",
+    "sheetDays": "Kunlar boʻyicha",
+    "titleSummary": "Davomat boʻyicha umumiy hisobot",
+    "titleDays": "Kunlar boʻyicha davomat",
+    "period": "Davr: {from} — {to}",
+    "employee": "Xodim",
+    "position": "Lavozim",
+    "daysWorked": "Ish kunlari",
+    "lateCount": "Kechikishlar",
+    "lateMinutesTotal": "Kechikish, jami daq",
+    "hoursInOffice": "Ofisda (s:dd)",
+    "hoursOutside": "Ofisdan tashqarida (s:dd)",
+    "total": "Jami",
+    "date": "Sana",
+    "checkIn": "Kelish",
+    "checkOut": "Ketish",
+    "lateMinutes": "Kechikish, daq",
+    "exits": "Chiqishlar",
+    "stillWorking": "ishda",
+    "noData": "Bu davrda ish kunlari yoʻq.",
+    "reason": {
+      "LUNCH": "Tushlik",
+      "CLIENT_VISIT": "Mijozga borish",
+      "MEETING": "Uchrashuv",
+      "PERSONAL": "Shaxsiy",
+      "OTHER": "Boshqa"
+    }
   }
 }

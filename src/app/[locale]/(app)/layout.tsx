@@ -30,7 +30,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     { href: "/clients", label: t("nav.clients") },
     { href: "/requests", label: t("nav.requests") },
     { href: "/office-plan", label: t("nav.officePlan") },
-    ...(user.role === "EMPLOYEE" ? [] : [{ href: "/map", label: t("nav.map") }]),
+    ...(user.role === "EMPLOYEE"
+      ? []
+      : [
+          { href: "/map", label: t("nav.map") },
+          { href: "/reports", label: t("nav.reports") },
+        ]),
   ];
   // Everyone sees that positions are simulated, so nobody takes them for real ones.
   const simulation = await getSimulationEnabled();
