@@ -286,12 +286,28 @@
     "weekend": "Today is a day off — lateness is not counted.",
     "errors": {
       "dayClosed": "Your workday is already finished. To check in again, contact an administrator.",
-      "notCheckedIn": "Check in first."
+      "notCheckedIn": "Check in first.",
+      "invalidTransition": "This action does not fit your current status — refresh the page.",
+      "commentRequired": "Add a comment for “Other”.",
+      "badRequest": "This request is not assigned to you."
     },
     "toast": {
       "checkedIn": "Check-in recorded. Have a good day!",
-      "dayEnded": "Day ended. See you tomorrow!"
-    }
+      "dayEnded": "Day ended. See you tomorrow!",
+      "exited": "Exit marked: {reason}",
+      "returned": "Welcome back!"
+    },
+    "exit": "Go out",
+    "exitTitle": "Where are you going?",
+    "exitHint": "Colleagues will see that you are out of the office. Personal reasons stay private.",
+    "pickRequest": "Request (optional)",
+    "noRequest": "Without a request",
+    "comment": "Comment",
+    "commentPlaceholder": "A few words — where and why",
+    "confirmExit": "Mark exit",
+    "back": "I'm back",
+    "outNow": "Out of office",
+    "geoNote": "If your browser allows it, we note where you are — only until the end of the workday."
   },
   "simulation": {
     "on": "Simulation is on",
@@ -317,7 +333,8 @@
     "CLIENT_VISIT": "Client visit",
     "MEETING": "Meeting",
     "PERSONAL": "Personal",
-    "OTHER": "Other"
+    "OTHER": "Other",
+    "END_OF_DAY": "End of day"
   },
   "reports": {
     "title": "Reports",

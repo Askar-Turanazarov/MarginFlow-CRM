@@ -65,11 +65,14 @@ export function AppShell({
   links,
   user,
   simulationLabel,
+  day,
   children,
 }: {
   links: NavItem[];
   user: ShellUser;
   simulationLabel?: string;
+  /** The day's main action (go out / come back): same place on every page. */
+  day?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const t = useTranslations("shell");
@@ -159,6 +162,7 @@ export function AppShell({
               {!rail && simulationLabel}
             </Badge>
           )}
+          {day && !rail && <div data-testid="sidebar-day">{day}</div>}
           {!rail && (
             <div className="flex flex-col gap-2">
               <ThemeSwitcher compact />
@@ -231,9 +235,14 @@ export function AppShell({
       </header>
 
       {/* ---------- Content: pushed by the sidebar, never covered ---------- */}
-      <main className="mx-auto w-full max-w-[1400px] px-4 pt-5 pb-28 [transition:padding_.55s_var(--ease-spring-soft)] md:pr-6 md:pb-10 md:pl-[calc(var(--sb-w)+1.75rem)] md:pt-6">
+      <main className="mx-auto w-full max-w-[1400px] px-4 pt-5 pb-44 [transition:padding_.55s_var(--ease-spring-soft)] md:pr-6 md:pb-10 md:pl-[calc(var(--sb-w)+1.75rem)] md:pt-6">
         {children}
       </main>
+
+      {/* ---------- Phone: the day action floats right above the tab bar, under the thumb ---------- */}
+      {day && (
+        <div className="fixed right-3 bottom-[calc(5.25rem+env(safe-area-inset-bottom))] z-40 w-44 md:hidden">{day}</div>
+      )}
 
       {/* ---------- Phone tab bar (thumb zone) ---------- */}
       {tabs.length > 0 && (

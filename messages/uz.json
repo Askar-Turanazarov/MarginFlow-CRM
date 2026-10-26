@@ -286,12 +286,28 @@
     "weekend": "Bugun dam olish kuni — kechikish hisoblanmaydi.",
     "errors": {
       "dayClosed": "Ish kuningiz allaqachon tugagan. Qayta belgilanish uchun administratorga murojaat qiling.",
-      "notCheckedIn": "Avval kelganingizni belgilang."
+      "notCheckedIn": "Avval kelganingizni belgilang.",
+      "invalidTransition": "Bu amal joriy holatga mos emas — sahifani yangilang.",
+      "commentRequired": "«Boshqa» uchun izoh kerak.",
+      "badRequest": "Bu ariza sizga biriktirilmagan."
     },
     "toast": {
       "checkedIn": "Kelish qayd etildi. Kuningiz xayrli oʻtsin!",
-      "dayEnded": "Ish kuni yakunlandi. Ertagacha!"
-    }
+      "dayEnded": "Ish kuni yakunlandi. Ertagacha!",
+      "exited": "Chiqish belgilandi: {reason}",
+      "returned": "Xush kelibsiz!"
+    },
+    "exit": "Chiqish",
+    "exitTitle": "Qayerga ketyapsiz?",
+    "exitHint": "Hamkasblar sizni ofisdan tashqarida ekaningizni koʻradi. Shaxsiy sabablar koʻrsatilmaydi.",
+    "pickRequest": "Ariza (ixtiyoriy)",
+    "noRequest": "Arizasiz",
+    "comment": "Izoh",
+    "commentPlaceholder": "Qisqacha — qayerga va nima uchun",
+    "confirmExit": "Chiqishni belgilash",
+    "back": "Qaytdim",
+    "outNow": "Ofisdan tashqarida",
+    "geoNote": "Brauzer ruxsat bersa, joylashuvingiz belgilanadi — faqat ish kuni oxirigacha."
   },
   "simulation": {
     "on": "Imitatsiya yoqilgan",
@@ -317,7 +333,8 @@
     "CLIENT_VISIT": "Mijozga borish",
     "MEETING": "Uchrashuv",
     "PERSONAL": "Shaxsiy",
-    "OTHER": "Boshqa"
+    "OTHER": "Boshqa",
+    "END_OF_DAY": "Ish kuni oxiri"
   },
   "reports": {
     "title": "Hisobotlar",

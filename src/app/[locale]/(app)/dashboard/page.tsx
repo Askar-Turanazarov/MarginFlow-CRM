@@ -70,7 +70,7 @@ export default async function DashboardPage() {
         </CardContent>
       </Card>
 
-      <MyDayCard workDay={workDay} settings={settings} />
+      <MyDayCard workDay={workDay} settings={settings} user={user} />
 
       <section className="grid gap-3">
         <h2 className="text-base font-semibold tracking-tight">{t("dashboard.now")}</h2>

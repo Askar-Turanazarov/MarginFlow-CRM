@@ -3,10 +3,14 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { OfficeClock } from "@/lib/attendance";
 import { cn } from "@/lib/utils";
-import { CheckInButton, EndDayButton } from "./attendance-buttons";
+import type { CurrentUser } from "@/lib/session";
+import { CheckInButton } from "./attendance-buttons";
+import { DayControls } from "./day-controls";
+import { getDayData } from "./day-data";
 
 /** Dashboard card: check-in time, lateness, leaving time and the "End of work" button. */
-export async function MyDayCard({ workDay, settings }: { workDay: WorkDay | null; settings: OfficeClock }) {
+export async function MyDayCard({ workDay, settings, user }: { workDay: WorkDay | null; settings: OfficeClock; user: CurrentUser }) {
+  const day = await getDayData(user, workDay);
   const t = await getTranslations("attendance");
   const format = await getFormatter();
   const time = (date: Date) =>
@@ -45,7 +49,7 @@ export async function MyDayCard({ workDay, settings }: { workDay: WorkDay | null
             {workDay.closed ? (
               <p className="text-sm text-muted-foreground">{t("dayClosed")}</p>
             ) : (
-              <EndDayButton />
+              <DayControls state={day.state} requests={day.requests} />
             )}
           </div>
         )}

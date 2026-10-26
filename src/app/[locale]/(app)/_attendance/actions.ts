@@ -2,11 +2,21 @@
 
 import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
-import { getOfficeSettings, getTodayWorkDay, lateness, officeDayDate } from "@/lib/attendance";
+import { z } from "zod";
+import {
+  EXIT_REASONS,
+  getOfficeSettings,
+  getTodayWorkDay,
+  lateness,
+  officeDayDate,
+  recordExit,
+  recordReturn,
+  type TransitionError,
+} from "@/lib/attendance";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 
-export type AttendanceState = { error?: "dayClosed" | "notCheckedIn" };
+export type AttendanceState = { error?: TransitionError };
 
 /** "I'm here": opens today's WorkDay, writes CHECK_IN and calculates lateness (SPEC §3–4). */
 export async function checkIn(): Promise<AttendanceState> {
@@ -72,4 +82,29 @@ export async function endDay(): Promise<AttendanceState> {
 
   revalidatePath("/", "layout");
   return {};
+}
+
+const exitSchema = z.object({
+  reason: z.enum(EXIT_REASONS),
+  requestId: z.string().max(40).nullish(),
+  comment: z.string().max(300).nullish(),
+});
+
+/** "I'm going out" with a reason (END_OF_DAY is a separate action: endDay). */
+export async function exitOffice(input: z.input<typeof exitSchema>): Promise<AttendanceState> {
+  const user = await requireUser();
+  const data = exitSchema.safeParse(input);
+  if (!data.success) return { error: "badRequest" };
+
+  const error = await recordExit(user.employeeId, user.id, data.data, await getOfficeSettings());
+  revalidatePath("/", "layout");
+  return error ? { error } : {};
+}
+
+/** "I'm back in the office". */
+export async function returnToOffice(): Promise<AttendanceState> {
+  const user = await requireUser();
+  const error = await recordReturn(user.employeeId, user.id, await getOfficeSettings());
+  revalidatePath("/", "layout");
+  return error ? { error } : {};
 }
