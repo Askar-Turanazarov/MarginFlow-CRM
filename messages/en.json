@@ -51,7 +51,7 @@
     "officeTime": "Office time {time}",
     "miniMapTitle": "Office now",
     "openPlan": "Open plan →",
-    "miniMapHint": "Dots are employees in the office. Hover a dot for details. Updates every 3 seconds.",
+    "miniMapHint": "Everyone in the office right now. Hover a person for details — updates every 3 seconds.",
     "feedTitle": "Latest events",
     "stats": {
       "inOffice": "In office",
@@ -70,6 +70,13 @@
       "late": "{minutes} min late",
       "onTime": "on time",
       "empty": "No events yet."
+    },
+    "live": "Live",
+    "officeTimeLabel": "Office time",
+    "greeting": {
+      "morning": "Good morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}"
     }
   },
   "employees": {
@@ -128,7 +135,8 @@
     "delete": "Delete",
     "edit": "Edit",
     "all": "All",
-    "none": "—"
+    "none": "—",
+    "close": "Close"
   },
   "clients": {
     "title": "Clients",
@@ -279,6 +287,10 @@
     "errors": {
       "dayClosed": "Your workday is already finished. To check in again, contact an administrator.",
       "notCheckedIn": "Check in first."
+    },
+    "toast": {
+      "checkedIn": "Check-in recorded. Have a good day!",
+      "dayEnded": "Day ended. See you tomorrow!"
     }
   },
   "simulation": {
@@ -343,5 +355,29 @@
       "PERSONAL": "Personal",
       "OTHER": "Other"
     }
+  },
+  "theme": {
+    "label": "Theme",
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "shell": {
+    "sidebar": "Main menu",
+    "search": "Search",
+    "collapse": "Collapse",
+    "expand": "Expand",
+    "account": "Account",
+    "tabs": "Sections"
+  },
+  "palette": {
+    "title": "Command palette",
+    "placeholder": "Search people, clients, requests…",
+    "empty": "Nothing found",
+    "goTo": "Go to",
+    "people": "People",
+    "clients": "Clients",
+    "requests": "Requests",
+    "language": "Language"
   }
 }

@@ -1,4 +1,5 @@
 import { getFormatter, getTranslations } from "next-intl/server";
+import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { isWorkingDay, lateFrom, officeDayDate, type OfficeClock } from "@/lib/attendance";
 import { prisma } from "@/lib/prisma";
@@ -45,7 +46,7 @@ export async function TodayOverview({ settings }: { settings: OfficeClock }) {
         <CardHeader>
           <CardTitle>
             {t("notCheckedInTitle")}
-            {checkInClosed && <span className="ml-2 text-muted-foreground">{missing.length}</span>}
+            {checkInClosed && <span className="ml-2 font-mono text-muted-foreground">{missing.length}</span>}
           </CardTitle>
         </CardHeader>
         <CardContent className="text-sm">
@@ -56,11 +57,14 @@ export async function TodayOverview({ settings }: { settings: OfficeClock }) {
           ) : missing.length === 0 ? (
             <p className="text-muted-foreground">{t("everyoneCheckedIn")}</p>
           ) : (
-            <ul className="grid gap-1.5">
+            <ul className="grid gap-2.5">
               {missing.map((e) => (
-                <li key={e.id} className="flex justify-between gap-2">
-                  <span className="font-medium">
-                    {e.firstName} {e.lastName}
+                <li key={e.id} className="flex items-center justify-between gap-2">
+                  <span className="flex min-w-0 items-center gap-2.5 font-medium">
+                    <Avatar id={e.id} name={`${e.firstName} ${e.lastName}`} size="sm" />
+                    <span className="truncate">
+                      {e.firstName} {e.lastName}
+                    </span>
                   </span>
                   <span className="text-muted-foreground">{e.desk?.code ?? e.position}</span>
                 </li>
@@ -74,20 +78,23 @@ export async function TodayOverview({ settings }: { settings: OfficeClock }) {
         <CardHeader>
           <CardTitle>
             {t("lateTodayTitle")}
-            <span className="ml-2 text-muted-foreground">{late.length}</span>
+            <span className="ml-2 font-mono text-muted-foreground">{late.length}</span>
           </CardTitle>
         </CardHeader>
         <CardContent className="text-sm">
           {late.length === 0 ? (
             <p className="text-muted-foreground">{t("nobodyLate")}</p>
           ) : (
-            <ul className="grid gap-1.5">
+            <ul className="grid gap-2.5">
               {late.map((d) => (
-                <li key={d.id} className="flex justify-between gap-2">
-                  <span className="font-medium">
-                    {d.employee.firstName} {d.employee.lastName}
+                <li key={d.id} className="flex items-center justify-between gap-2">
+                  <span className="flex min-w-0 items-center gap-2.5 font-medium">
+                    <Avatar id={d.employee.id} name={`${d.employee.firstName} ${d.employee.lastName}`} size="sm" />
+                    <span className="truncate">
+                      {d.employee.firstName} {d.employee.lastName}
+                    </span>
                   </span>
-                  <span className="text-destructive">
+                  <span className="shrink-0 font-mono text-xs text-sig-late">
                     {time(d.checkInAt)} · {t("late", { minutes: d.lateMinutes })}
                   </span>
                 </li>

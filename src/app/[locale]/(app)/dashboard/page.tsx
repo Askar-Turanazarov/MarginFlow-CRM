@@ -1,5 +1,5 @@
 import type { EmployeeStatus } from "@prisma/client";
-import { getTranslations } from "next-intl/server";
+import { getFormatter, getTranslations } from "next-intl/server";
 import { StatusBadge } from "@/components/status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatInTimeZone } from "date-fns-tz";
@@ -9,6 +9,7 @@ import { getPlanImage } from "@/lib/office-plan";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { MyDayCard } from "../_attendance/my-day-card";
+import { OfficeClock } from "./office-clock";
 import { TodayOverview } from "../_attendance/today-overview";
 import { AdminDashboard } from "./admin-dashboard";
 
@@ -22,13 +23,8 @@ export default async function DashboardPage() {
   if (user.role === "ADMIN") {
     const [initial, plan, zones] = await Promise.all([getAdminDashboard(), getPlanImage(), prisma.zone.findMany()]);
     return (
-      <div className="grid gap-6">
-        <div className="flex flex-wrap items-baseline justify-between gap-2">
-          <h1 className="text-2xl font-semibold">{t("dashboard.welcome", { name: user.employee.firstName })}</h1>
-          <span className="text-sm text-muted-foreground">
-            {t("dashboard.officeTime", { time: formatInTimeZone(new Date(), settings.timezone, "HH:mm") })}
-          </span>
-        </div>
+      <div className="grid gap-5">
+        <PageGreeting name={user.employee.firstName} timezone={settings.timezone} />
         <AdminDashboard
           initial={initial}
           imageUrl={plan.url}
@@ -36,7 +32,7 @@ export default async function DashboardPage() {
           timezone={settings.timezone}
         />
         <section className="grid gap-3">
-          <h2 className="text-lg font-medium">{t("attendance.today")}</h2>
+          <h2 className="text-base font-semibold tracking-tight">{t("attendance.today")}</h2>
           <TodayOverview settings={settings} />
         </section>
       </div>
@@ -54,10 +50,8 @@ export default async function DashboardPage() {
   const total = groups.reduce((sum, g) => sum + g._count, 0);
 
   return (
-    <div className="grid gap-6">
-      <h1 className="text-2xl font-semibold">
-        {t("dashboard.welcome", { name: user.employee.firstName })}
-      </h1>
+    <div className="grid gap-5">
+      <PageGreeting name={user.employee.firstName} timezone={settings.timezone} />
 
       <Card>
         <CardContent className="grid gap-2 text-sm sm:grid-cols-3">
@@ -79,26 +73,46 @@ export default async function DashboardPage() {
       <MyDayCard workDay={workDay} settings={settings} />
 
       <section className="grid gap-3">
-        <h2 className="text-lg font-medium">{t("dashboard.now")}</h2>
-        <div className="grid gap-3 sm:grid-cols-4">
+        <h2 className="text-base font-semibold tracking-tight">{t("dashboard.now")}</h2>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {STATUSES.map((status) => (
-            <Card key={status}>
+            <Card key={status} material="glass" size="sm">
               <CardHeader>
                 <CardTitle>
                   <StatusBadge status={status} />
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-3xl font-semibold">{count(status)}</CardContent>
+              <CardContent className="font-mono text-3xl font-semibold">{count(status)}</CardContent>
             </Card>
           ))}
-          <Card>
+          <Card material="glass" size="sm">
             <CardHeader>
-              <CardTitle className="text-sm text-muted-foreground">{t("dashboard.staff")}</CardTitle>
+              <CardTitle className="text-sm font-medium text-muted-foreground">{t("dashboard.staff")}</CardTitle>
             </CardHeader>
-            <CardContent className="text-3xl font-semibold">{total}</CardContent>
+            <CardContent className="font-mono text-3xl font-semibold">{total}</CardContent>
           </Card>
         </div>
       </section>
     </div>
+  );
+}
+
+/** "Good morning, Olivia" by the office clock, with the office time ticking next to it. */
+async function PageGreeting({ name, timezone }: { name: string; timezone: string }) {
+  const t = await getTranslations("dashboard");
+  const format = await getFormatter();
+  const now = new Date();
+  const hour = Number(formatInTimeZone(now, timezone, "H"));
+  const part = hour < 5 ? "evening" : hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
+  return (
+    <header className="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p className="text-sm text-muted-foreground">{format.dateTime(now, { weekday: "long", day: "numeric", month: "long", timeZone: timezone })}</p>
+        <h1 className="text-[1.75rem] leading-tight font-semibold tracking-[-0.02em]">{t(`greeting.${part}`, { name })}</h1>
+      </div>
+      <span className="glass rounded-full px-3.5 py-1.5 text-sm text-muted-foreground">
+        {t("officeTimeLabel")} <OfficeClock timezone={timezone} initial={formatInTimeZone(now, timezone, "HH:mm")} />
+      </span>
+    </header>
   );
 }

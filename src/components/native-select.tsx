@@ -1,7 +1,7 @@
+import { fieldClass } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 
-export const selectClass =
-  "h-8 w-full rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 aria-invalid:border-destructive";
+export const selectClass = cn(fieldClass, "select-chevron appearance-none pr-9");
 
 export function NativeSelect({ className, ...props }: React.ComponentProps<"select">) {
   return <select className={cn(selectClass, className)} {...props} />;

@@ -51,7 +51,7 @@
     "officeTime": "Ofis vaqti {time}",
     "miniMapTitle": "Ofis hozir",
     "openPlan": "Rejani ochish →",
-    "miniMapHint": "Nuqtalar — ofisdagi xodimlar. Tafsilotlar uchun nuqta ustiga olib boring. Har 3 soniyada yangilanadi.",
+    "miniMapHint": "Hozir ofisdagi barcha xodimlar. Tafsilotlar uchun xodim ustiga olib boring — har 3 soniyada yangilanadi.",
     "feedTitle": "Soʻnggi voqealar",
     "stats": {
       "inOffice": "Ofisda",
@@ -70,6 +70,13 @@
       "late": "{minutes} daq kechikish",
       "onTime": "oʻz vaqtida",
       "empty": "Hozircha voqealar yoʻq."
+    },
+    "live": "Jonli",
+    "officeTimeLabel": "Ofis vaqti",
+    "greeting": {
+      "morning": "Xayrli tong, {name}",
+      "afternoon": "Xayrli kun, {name}",
+      "evening": "Xayrli kech, {name}"
     }
   },
   "employees": {
@@ -128,7 +135,8 @@
     "delete": "Oʻchirish",
     "edit": "Tahrirlash",
     "all": "Hammasi",
-    "none": "—"
+    "none": "—",
+    "close": "Yopish"
   },
   "clients": {
     "title": "Mijozlar",
@@ -279,6 +287,10 @@
     "errors": {
       "dayClosed": "Ish kuningiz allaqachon tugagan. Qayta belgilanish uchun administratorga murojaat qiling.",
       "notCheckedIn": "Avval kelganingizni belgilang."
+    },
+    "toast": {
+      "checkedIn": "Kelish qayd etildi. Kuningiz xayrli oʻtsin!",
+      "dayEnded": "Ish kuni yakunlandi. Ertagacha!"
     }
   },
   "simulation": {
@@ -343,5 +355,29 @@
       "PERSONAL": "Shaxsiy",
       "OTHER": "Boshqa"
     }
+  },
+  "theme": {
+    "label": "Mavzu",
+    "system": "Tizim boʻyicha",
+    "light": "Yorugʻ",
+    "dark": "Qorongʻi"
+  },
+  "shell": {
+    "sidebar": "Asosiy menyu",
+    "search": "Qidiruv",
+    "collapse": "Yigʻish",
+    "expand": "Yoyish",
+    "account": "Profil",
+    "tabs": "Boʻlimlar"
+  },
+  "palette": {
+    "title": "Tezkor buyruqlar",
+    "placeholder": "Xodimlar, mijozlar, arizalar…",
+    "empty": "Hech narsa topilmadi",
+    "goTo": "Oʻtish",
+    "people": "Xodimlar",
+    "clients": "Mijozlar",
+    "requests": "Arizalar",
+    "language": "Til"
   }
 }

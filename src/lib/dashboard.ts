@@ -17,6 +17,7 @@ export type FeedItem = {
   id: string;
   kind: "CHECK_IN" | "EXIT" | "RETURN" | "END_OF_DAY" | "ASSIGNED";
   at: string;
+  employeeId: string;
   name: string;
   reason?: ExitReason | null;
   request?: string | null;
@@ -63,6 +64,7 @@ export async function getAdminDashboard(): Promise<AdminDashboard> {
       id: e.id,
       kind: e.type,
       at: e.at.toISOString(),
+      employeeId: e.workDay.employee.id,
       name: fullName(e.workDay.employee),
       reason: e.reason,
       request: e.request?.title ?? null,
@@ -73,6 +75,7 @@ export async function getAdminDashboard(): Promise<AdminDashboard> {
       id: `assigned-${r.id}`,
       kind: "ASSIGNED" as const,
       at: r.assignedAt!.toISOString(),
+      employeeId: r.assignee!.id,
       name: fullName(r.assignee!),
       request: r.title,
       client: r.client.companyName,
