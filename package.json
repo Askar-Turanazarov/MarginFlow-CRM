@@ -14,7 +14,8 @@
     "postinstall": "prisma generate",
     "db:stop": "node prisma/local-db.mjs stop",
     "sim:on": "tsx src/lib/simulation/cli.ts on",
-    "sim:off": "tsx src/lib/simulation/cli.ts off"
+    "sim:off": "tsx src/lib/simulation/cli.ts off",
+    "mcp": "tsx mcp-server/server.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

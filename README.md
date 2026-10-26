@@ -32,13 +32,13 @@ All people, companies, addresses, phones and e-mails in the demo are **fictional
   - Positions are stored as shares of the image size, so nothing shifts on other screen sizes.
   - A built-in test plan is shown until an image is uploaded.
 - **3 interface languages**: English, Oʻzbekcha, Русский.
+- **Check-in and end of day**: "I'm here" and "End of work" buttons; arrival after 09:05:59 is late, the admin sees who is late or has not checked in.
+- **City map** of employees who are out of the office (admin and managers), movement simulation for the demo.
+- **Reports**: attendance Excel file for a period — sheets "Summary" and "By day".
+- **MCP server for an AI agent** (`mcp-server/`, `npm run mcp`, secret key): where everyone is, find an employee, who was late today, attendance summary, assign a request to a free employee in the office.
 
 **Planned** (see [docs/SPEC.md](docs/SPEC.md))
-- Check-in / exit with a reason / return / end of day.
-- Lateness rule: the workday starts at 09:00 with a 5-minute grace period.
-- City map of employees who are out of the office.
-- Excel report.
-- Read-only API/MCP for an AI agent.
+- Exit with a reason / return during the day.
 
 ### Tech stack
 
@@ -108,6 +108,7 @@ The demo data also has 20 desks (13 occupied), 3 zones, 7 clients (California an
 | `npm run db:migrate` | Apply Prisma migrations |
 | `npm run db:seed` | Load mock data |
 | `npm run sim:on` / `sim:off` | Turn the movement simulation on / off (while `npm run dev` is running) |
+| `npm run mcp` | MCP server for an AI agent: http://127.0.0.1:3333/mcp (needs `MCP_API_KEY` in `.env`) |
 
 ### Notes
 
@@ -145,13 +146,13 @@ Demodagi barcha odamlar, kompaniyalar, manzillar, telefonlar va e-mail’lar **t
   - Joylashuvlar rasm oʻlchamiga nisbatan ulushlarda saqlanadi, shuning uchun boshqa ekranlarda siljimaydi.
   - Rasm yuklanmaguncha ichki test rejasi koʻrsatiladi.
 - **Interfeysning 3 tili**: English, Oʻzbekcha, Русский.
+- **Kelish va kun yakuni**: «Keldim» va «Ishni tugatish» tugmalari; 09:05:59 dan keyin kelish — kechikish, administrator kechikkanlar va belgilanmaganlarni koʻradi.
+- **Shahar xaritasi**: ofisdan tashqaridagi xodimlar (administrator va menejerlar), demo uchun harakat imitatsiyasi.
+- **Hisobotlar**: davr boʻyicha davomat Excel fayli — «Umumiy» va «Kunlar boʻyicha» varaqlari.
+- **AI-agent uchun MCP server** (`mcp-server/`, `npm run mcp`, maxfiy kalit): hamma qayerda, xodimni topish, bugun kim kechikdi, davomat hisoboti, ofisdagi boʻsh xodimga ariza biriktirish.
 
 **Rejada** ([docs/SPEC.md](docs/SPEC.md) ga qarang)
-- Kelish / sabab bilan chiqish / qaytish / kun yakuni.
-- Kechikish qoidasi: ish kuni 09:00 da boshlanadi, 5 daqiqa ruxsat beriladi.
-- Ofisdan tashqaridagi xodimlarning shahar xaritasi.
-- Excel hisobot.
-- AI-agent uchun faqat oʻqish rejimidagi API/MCP.
+- Kun davomida sabab bilan chiqish / qaytish.
 
 ### Texnologiyalar
 
@@ -221,6 +222,7 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 | `npm run db:migrate` | Prisma migratsiyalarini qoʻllash |
 | `npm run db:seed` | Mock maʼlumotlarni yuklash |
 | `npm run sim:on` / `sim:off` | Harakat imitatsiyasini yoqish / oʻchirish (`npm run dev` ishlab turganda) |
+| `npm run mcp` | AI-agent uchun MCP server: http://127.0.0.1:3333/mcp (`.env` da `MCP_API_KEY` kerak) |
 
 ### Eslatmalar
 
@@ -258,13 +260,13 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
   - Положение хранится в долях от размера картинки, поэтому на других экранах ничего не съезжает.
   - Пока картинка не загружена, показывается встроенный тестовый план.
 - **3 языка интерфейса**: English, Oʻzbekcha, Русский.
+- **Приход и конец дня**: кнопки «Я пришёл» и «Закончить работу»; приход после 09:05:59 — опоздание, админ видит опоздавших и не отметившихся.
+- **Карта города** с сотрудниками вне офиса (админ и менеджеры), имитация движения для демо.
+- **Отчёты**: Excel-файл посещаемости за период — листы «Сводка» и «По дням».
+- **MCP-сервер для ИИ-агента** (`mcp-server/`, `npm run mcp`, секретный ключ): где все сотрудники, поиск сотрудника, кто опоздал сегодня, сводка прихода и ухода, назначение заявки свободному сотруднику в офисе.
 
 **В планах** (см. [docs/SPEC.md](docs/SPEC.md))
-- Приход / выход с причиной / возврат / конец дня.
-- Правило опозданий: рабочий день с 09:00, допуск 5 минут.
-- Карта города с сотрудниками вне офиса.
-- Отчёт в Excel.
-- API/MCP для ИИ-агента (только чтение).
+- Выход с причиной / возврат в течение дня.
 
 ### Технологии
 
@@ -334,6 +336,7 @@ npm run db:stop
 | `npm run db:migrate` | Применить миграции Prisma |
 | `npm run db:seed` | Залить мок-данные |
 | `npm run sim:on` / `sim:off` | Включить / выключить имитацию движения (пока работает `npm run dev`) |
+| `npm run mcp` | MCP-сервер для ИИ-агента: http://127.0.0.1:3333/mcp (нужен `MCP_API_KEY` в `.env`) |
 
 ### Примечания
 

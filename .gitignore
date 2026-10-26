@@ -16,6 +16,7 @@ next-env.d.ts
 
 # Not part of the project: AI / notes / plans / logs
 .claude/
+.mcp.json
 tasks/
 CLAUDE.md
 CLAUDE.local.md
