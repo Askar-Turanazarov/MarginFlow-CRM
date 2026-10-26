@@ -7,4 +7,6 @@ const placeholder = () => <div className="h-full min-h-72 w-full animate-pulse r
 
 export const ClientsMap = dynamic(() => import("./clients-map-inner"), { ssr: false, loading: placeholder });
 export const LocationPicker = dynamic(() => import("./location-picker-inner"), { ssr: false, loading: placeholder });
+export const CityMap = dynamic(() => import("./city-map-inner"), { ssr: false, loading: placeholder });
 export type { ClientPoint } from "./clients-map-inner";
+export type { CityMapPerson, CityMapPlace } from "./city-map-inner";

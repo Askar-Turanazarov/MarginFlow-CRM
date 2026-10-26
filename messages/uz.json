@@ -10,7 +10,8 @@
     "language": "Til",
     "clients": "Mijozlar",
     "requests": "Arizalar",
-    "officePlan": "Ofis rejasi"
+    "officePlan": "Ofis rejasi",
+    "map": "Xarita"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -29,7 +30,9 @@
     "password": "Parol",
     "submit": "Kirish",
     "submitting": "Kirilmoqda…",
-    "invalid": "Login yoki parol notoʻgʻri"
+    "invalid": "Login yoki parol notoʻgʻri",
+    "devTitle": "Tezkor kirish (lokal sinov)",
+    "devHint": "Faqat localhost da npm run dev ishlaganda. Parol kerak emas."
   },
   "dashboard": {
     "title": "Bosh sahifa",
@@ -221,6 +224,53 @@
       "fileType": "PNG, JPG yoki WebP rasm yuklang",
       "fileSize": "Fayl 5 MB dan katta",
       "notFound": "Topilmadi"
+    },
+    "personNow": "Xodim hozir"
+  },
+  "attendance": {
+    "checkInHint": "Ish kuni {start} da boshlanadi. {lastOnTime} gacha kelish — oʻz vaqtida, keyin — kechikish.",
+    "officeTime": "Hozir ofisda: {time}",
+    "pc": "Kompyuter {pc}",
+    "checkIn": "Men keldim",
+    "endDay": "Ishni tugatish",
+    "endDayConfirm": "Ish kunini tugatasizmi? Bugun qayta belgilanish faqat administrator orqali boʻladi.",
+    "myDay": "Mening kunim",
+    "notCheckedIn": "Siz bugun hali kelganingizni belgilamadingiz.",
+    "checkInAt": "Kelish",
+    "checkOutAt": "Ketish",
+    "onTime": "Oʻz vaqtida",
+    "late": "{minutes} daqiqa kechikish",
+    "dayClosed": "Ish kuni tugadi.",
+    "today": "Bugungi davomat",
+    "notCheckedInTitle": "Belgilanmaganlar",
+    "notCheckedInWait": "Roʻyxat {time} dan keyin chiqadi.",
+    "everyoneCheckedIn": "Hamma belgilandi.",
+    "lateTodayTitle": "Bugun kechikkanlar",
+    "nobodyLate": "Bugun kechikkanlar yoʻq.",
+    "weekend": "Bugun dam olish kuni — kechikish hisoblanmaydi.",
+    "errors": {
+      "dayClosed": "Ish kuningiz allaqachon tugagan. Qayta belgilanish uchun administratorga murojaat qiling.",
+      "notCheckedIn": "Avval kelganingizni belgilang."
     }
+  },
+  "simulation": {
+    "on": "Imitatsiya yoqilgan",
+    "off": "Imitatsiya oʻchirilgan",
+    "start": "Yoqish",
+    "stop": "Oʻchirish",
+    "badge": "Imitatsiya"
+  },
+  "map": {
+    "title": "Xarita",
+    "hint": "Ofis, mijozlar va ofisdan tashqaridagi xodimlar. Har 3 soniyada yangilanadi.",
+    "outside": "Ofisdan tashqarida",
+    "nobody": "Hozir ofisdan tashqarida hech kim yoʻq."
+  },
+  "exitReason": {
+    "LUNCH": "Tushlik",
+    "CLIENT_VISIT": "Mijozga borish",
+    "MEETING": "Uchrashuv",
+    "PERSONAL": "Shaxsiy",
+    "OTHER": "Boshqa"
   }
 }

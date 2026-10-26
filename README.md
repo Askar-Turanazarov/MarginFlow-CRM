@@ -101,12 +101,13 @@ The demo data also has 20 desks (13 occupied), 3 zones, 7 clients (California an
 
 | Command | What it does |
 |---|---|
-| `npm run dev` | Development server |
+| `npm run dev` | Development server (starts local PostgreSQL first) |
 | `npm run build` / `npm start` | Production build / run |
 | `npm run lint` | ESLint |
 | `npm run db:start` / `db:stop` | Start / stop local PostgreSQL |
 | `npm run db:migrate` | Apply Prisma migrations |
 | `npm run db:seed` | Load mock data |
+| `npm run sim:on` / `sim:off` | Turn the movement simulation on / off (while `npm run dev` is running) |
 
 ### Notes
 
@@ -213,12 +214,13 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 
 | Buyruq | Vazifasi |
 |---|---|
-| `npm run dev` | Ishlab chiqish serveri |
+| `npm run dev` | Ishlab chiqish serveri (avval lokal PostgreSQL ni ishga tushiradi) |
 | `npm run build` / `npm start` | Production build / ishga tushirish |
 | `npm run lint` | ESLint |
 | `npm run db:start` / `db:stop` | Lokal PostgreSQL ni ishga tushirish / toʻxtatish |
 | `npm run db:migrate` | Prisma migratsiyalarini qoʻllash |
 | `npm run db:seed` | Mock maʼlumotlarni yuklash |
+| `npm run sim:on` / `sim:off` | Harakat imitatsiyasini yoqish / oʻchirish (`npm run dev` ishlab turganda) |
 
 ### Eslatmalar
 
@@ -325,12 +327,13 @@ npm run db:stop
 
 | Команда | Что делает |
 |---|---|
-| `npm run dev` | Сервер разработки |
+| `npm run dev` | Сервер разработки (сначала сам запускает локальный PostgreSQL) |
 | `npm run build` / `npm start` | Сборка / запуск в продакшене |
 | `npm run lint` | ESLint |
 | `npm run db:start` / `db:stop` | Запустить / остановить локальный PostgreSQL |
 | `npm run db:migrate` | Применить миграции Prisma |
 | `npm run db:seed` | Залить мок-данные |
+| `npm run sim:on` / `sim:off` | Включить / выключить имитацию движения (пока работает `npm run dev`) |
 
 ### Примечания
 

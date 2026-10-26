@@ -4,12 +4,14 @@ import type { EmployeeStatus, ZoneKind } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import { useRef, useState, useTransition } from "react";
 import { NativeSelect } from "@/components/native-select";
+import { useOfficePresence } from "@/components/presence";
 import { StatusBadge } from "@/components/status-badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { SimulationToggle } from "../_simulation/simulation-toggle";
 import {
   deleteDesk,
   deleteZone,
@@ -88,6 +90,7 @@ export function OfficePlanEditor({ desks, zones, employees, imageUrl, isTestPlan
   const [draft, setDraft] = useState<{ start: { x: number; y: number }; end: { x: number; y: number } } | null>(null);
   const [pending, startTransition] = useTransition();
   const [planError, setPlanError] = useState<string | null>(null);
+  const presence = useOfficePresence();
 
   /** Pointer position as shares (0..1) of the plan image. */
   const pointAt = (e: React.PointerEvent) => {
@@ -174,7 +177,7 @@ export function OfficePlanEditor({ desks, zones, employees, imageUrl, isTestPlan
     <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
       <div className="grid gap-2">
         {canEdit && (
-          <div className="flex flex-wrap gap-1" role="toolbar">
+          <div className="flex flex-wrap items-center gap-1" role="toolbar">
             {(["select", "desk", "zone"] as const).map((m) => (
               <Button
                 key={m}
@@ -186,6 +189,9 @@ export function OfficePlanEditor({ desks, zones, employees, imageUrl, isTestPlan
                 {t(`officePlan.mode${m[0].toUpperCase()}${m.slice(1)}`)}
               </Button>
             ))}
+            <div className="ml-auto">
+              <SimulationToggle enabled={!!presence.data?.simulation} />
+            </div>
           </div>
         )}
         <p className="text-sm text-muted-foreground">{t(`officePlan.${hint}`)}</p>
@@ -270,6 +276,23 @@ export function OfficePlanEditor({ desks, zones, employees, imageUrl, isTestPlan
                 </button>
               );
             })}
+            {/* People in the office right now; moves every 3 s with the simulator or sensors. */}
+            {presence.data?.office.map((p) => (
+              <span
+                key={p.id}
+                data-testid="person"
+                title={p.name}
+                className="pointer-events-none absolute z-10 flex size-7 items-center justify-center rounded-full border-2 border-white bg-sky-600 text-[10px] font-semibold text-white shadow-md transition-[left,top,transform] duration-[2800ms] ease-linear"
+                style={{
+                  left: `${p.x * 100}%`,
+                  top: `${p.y * 100}%`,
+                  // Sitting at the desk: shifted to its corner so the desk code stays readable.
+                  transform: p.moving ? "translate(-50%, -50%)" : "translate(-5%, -95%)",
+                }}
+              >
+                {p.initials}
+              </span>
+            ))}
             {selection?.type === "newDesk" && (
               <div
                 className="pointer-events-none absolute flex size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-md border-2 border-dashed border-primary bg-primary/20 text-xs font-semibold"
@@ -361,6 +384,10 @@ function Legend() {
           {label}
         </span>
       ))}
+      <span className="flex items-center gap-1.5">
+        <span className="size-3.5 rounded-full border-2 border-white bg-sky-600 shadow" />
+        {t("officePlan.personNow")}
+      </span>
     </div>
   );
 }

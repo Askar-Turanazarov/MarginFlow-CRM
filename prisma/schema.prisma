@@ -40,6 +40,13 @@ enum AttendanceEventType {
   END_OF_DAY
 }
 
+// Who sent a position: phone geolocation, an office sensor, or the movement simulator.
+enum LocationSource {
+  PHONE
+  SENSOR
+  SIMULATOR
+}
+
 enum RequestStatus {
   NEW
   ASSIGNED
@@ -83,6 +90,10 @@ model Employee {
   desk              Desk?          @relation(fields: [deskId], references: [id], onDelete: SetNull)
   status            EmployeeStatus @default(OFF_DUTY)
   currentExitReason ExitReason?
+  // Latest position on the office plan (shares 0..1), only while IN_OFFICE. Older than a minute → shown at the desk.
+  planX             Float?
+  planY             Float?
+  planAt            DateTime?
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 
@@ -197,14 +208,15 @@ model AttendanceEvent {
 }
 
 model LocationPoint {
-  id        String   @id @default(cuid())
+  id        String         @id @default(cuid())
   workDayId String
-  workDay   WorkDay  @relation(fields: [workDayId], references: [id], onDelete: Cascade)
+  workDay   WorkDay        @relation(fields: [workDayId], references: [id], onDelete: Cascade)
   lat       Float
   lng       Float
   accuracy  Float
+  source    LocationSource @default(PHONE)
   at        DateTime
-  createdAt DateTime @default(now())
+  createdAt DateTime       @default(now())
 
   @@index([workDayId, at])
 }
@@ -220,6 +232,7 @@ model OfficeSettings {
   officeLng               Float    @default(-122.143)
   locationIntervalMinutes Int      @default(5)
   locationRetentionDays   Int      @default(90)
+  simulationEnabled       Boolean  @default(false)
   updatedAt               DateTime @updatedAt
 }
 

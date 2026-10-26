@@ -10,7 +10,8 @@
     "language": "Language",
     "clients": "Clients",
     "requests": "Requests",
-    "officePlan": "Office plan"
+    "officePlan": "Office plan",
+    "map": "Map"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -29,7 +30,9 @@
     "password": "Password",
     "submit": "Sign in",
     "submitting": "Signing in…",
-    "invalid": "Wrong login or password"
+    "invalid": "Wrong login or password",
+    "devTitle": "Quick login (local testing)",
+    "devHint": "Only under npm run dev on localhost. No password needed."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -221,6 +224,53 @@
       "fileType": "Upload a PNG, JPG or WebP image",
       "fileSize": "The file is larger than 5 MB",
       "notFound": "Not found"
+    },
+    "personNow": "Employee now"
+  },
+  "attendance": {
+    "checkInHint": "The workday starts at {start}. Check-in until {lastOnTime} is on time, later counts as late.",
+    "officeTime": "Office time now: {time}",
+    "pc": "PC {pc}",
+    "checkIn": "I'm here",
+    "endDay": "End of work",
+    "endDayConfirm": "Finish your workday? Checking in again today will only be possible through an administrator.",
+    "myDay": "My day",
+    "notCheckedIn": "You haven't checked in today yet.",
+    "checkInAt": "Check-in",
+    "checkOutAt": "Left",
+    "onTime": "On time",
+    "late": "Late by {minutes} min",
+    "dayClosed": "Workday finished.",
+    "today": "Attendance today",
+    "notCheckedInTitle": "Not checked in",
+    "notCheckedInWait": "The list will appear after {time}.",
+    "everyoneCheckedIn": "Everyone has checked in.",
+    "lateTodayTitle": "Late today",
+    "nobodyLate": "Nobody is late today.",
+    "weekend": "Today is a day off — lateness is not counted.",
+    "errors": {
+      "dayClosed": "Your workday is already finished. To check in again, contact an administrator.",
+      "notCheckedIn": "Check in first."
     }
+  },
+  "simulation": {
+    "on": "Simulation is on",
+    "off": "Simulation is off",
+    "start": "Start",
+    "stop": "Stop",
+    "badge": "Simulation"
+  },
+  "map": {
+    "title": "Map",
+    "hint": "Office, clients and employees outside the office. Updates every 3 seconds.",
+    "outside": "Out of office",
+    "nobody": "Nobody is out of the office right now."
+  },
+  "exitReason": {
+    "LUNCH": "Lunch",
+    "CLIENT_VISIT": "Client visit",
+    "MEETING": "Meeting",
+    "PERSONAL": "Personal",
+    "OTHER": "Other"
   }
 }
