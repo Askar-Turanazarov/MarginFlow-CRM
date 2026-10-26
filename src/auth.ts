@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
+import { DEV_LOGIN_ENABLED } from "@/lib/dev-login";
 import { prisma } from "@/lib/prisma";
 
 const credentialsSchema = z.object({
@@ -32,6 +33,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         return { id: user.id, name: `${user.employee.firstName} ${user.employee.lastName}` };
       },
     }),
+    // TEMPORARY, `npm run dev` only (see src/lib/dev-login.ts): quick login by login name, no password.
+    ...(DEV_LOGIN_ENABLED
+      ? [
+          Credentials({
+            id: "dev-login",
+            credentials: { login: {} },
+            async authorize(raw) {
+              const login = z.string().trim().toLowerCase().min(1).safeParse(raw?.login);
+              if (!login.success) return null;
+              const user = await prisma.user.findUnique({ where: { login: login.data }, include: { employee: true } });
+              if (!user?.isActive) return null;
+              return { id: user.id, name: `${user.employee.firstName} ${user.employee.lastName}` };
+            },
+          }),
+        ]
+      : []),
   ],
   callbacks: {
     session({ session, token }) {

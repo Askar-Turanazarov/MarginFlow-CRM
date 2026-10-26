@@ -1,9 +1,11 @@
 "use server";
 
 import { AuthError } from "next-auth";
+import { headers } from "next/headers";
 import { getLocale } from "next-intl/server";
 import { signIn, signOut } from "@/auth";
 import { routing, type AppLocale } from "@/i18n/routing";
+import { DEV_LOGIN_ENABLED, isLocalHost } from "@/lib/dev-login";
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/session";
 
@@ -22,6 +24,13 @@ export async function login(_prev: LoginState, formData: FormData): Promise<Logi
     throw error; // the redirect after a successful sign-in is thrown too
   }
   return {};
+}
+
+/** TEMPORARY, `npm run dev` only: one-click login buttons on the login page (see src/lib/dev-login.ts). */
+export async function devLogin(formData: FormData) {
+  if (!DEV_LOGIN_ENABLED || !isLocalHost((await headers()).get("host"))) return;
+  const locale = await getLocale();
+  await signIn("dev-login", { login: formData.get("login"), redirectTo: `/${locale}/dashboard` });
 }
 
 export async function logout() {
