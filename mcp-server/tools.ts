@@ -5,6 +5,7 @@ import { z } from "zod";
 import { getOfficeSettings, isWorkingDay, lateFrom, officeDay, officeDayDate, type OfficeClock } from "@/lib/attendance";
 import { parseDay } from "@/lib/dates";
 import { PLAN_POSITION_TTL_MS } from "@/lib/positions";
+import { zoneAt } from "@/lib/presence";
 import { prisma } from "@/lib/prisma";
 import { getAttendanceReport, hoursMinutes, MAX_REPORT_DAYS } from "@/lib/report";
 import { ok, safely, ToolError } from "./errors";
@@ -73,11 +74,6 @@ function parsePeriod(from: string, to: string) {
   if (days < 1) throw new ToolError("BAD_PERIOD", "Дата «from» позже даты «to».", "Поменяйте даты местами.");
   if (days > MAX_REPORT_DAYS) throw new ToolError("PERIOD_TOO_LONG", `Период ${days} дн. — больше допустимых ${MAX_REPORT_DAYS}.`, "Разбейте период на части не длиннее года.");
   return { f, t };
-}
-
-/** Which zone (kitchen, meeting room…) contains a point on the plan. */
-function zoneAt(zones: { name: string; x: number; y: number; width: number; height: number }[], x: number, y: number) {
-  return zones.find((z) => x >= z.x && x <= z.x + z.width && y >= z.y && y <= z.y + z.height)?.name ?? null;
 }
 
 export function registerTools(server: McpServer) {
@@ -352,7 +348,7 @@ export function registerTools(server: McpServer) {
 
         const updated = await prisma.request.update({
           where: { id: target.id },
-          data: { assigneeId: assignee.id, ...(target.status === "NEW" && { status: "ASSIGNED" }) },
+          data: { assigneeId: assignee.id, assignedAt: new Date(), ...(target.status === "NEW" && { status: "ASSIGNED" }) },
           include: { client: true },
         });
         const openNow = await prisma.request.count({ where: { assigneeId: assignee.id, status: { in: [...OPEN_REQUEST] } } });

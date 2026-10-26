@@ -46,7 +46,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-4 px-4 py-3">
           <span className="font-semibold">{t("app.name")}</span>
           {!mustCheckIn && <NavLinks links={links} />}
-          <div className="ml-auto flex items-center gap-3">
+          <div className="ml-auto flex flex-wrap items-center gap-3">
             {simulation && (
               <Badge className="bg-sky-100 text-sky-800" data-testid="simulation-badge">
                 {t("simulation.badge")}

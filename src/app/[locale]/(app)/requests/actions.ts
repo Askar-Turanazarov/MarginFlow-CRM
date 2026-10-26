@@ -81,6 +81,9 @@ export async function saveRequest(_prev: RequestFormState, formData: FormData): 
   const status = resolveStatus(d.status, assigneeId);
   if (status === "assigneeRequired") return fail({ fieldErrors: { assigneeId: "assigneeRequired" } });
 
+  // A new assignee → new assignment time (shown in the admin activity feed).
+  const previous = id ? await prisma.request.findUnique({ where: { id }, select: { assigneeId: true } }) : null;
+  const assignedAt = assigneeId && assigneeId !== previous?.assigneeId ? new Date() : undefined;
   const data = {
     clientId: d.clientId,
     title: d.title,
@@ -88,6 +91,8 @@ export async function saveRequest(_prev: RequestFormState, formData: FormData): 
     assigneeId,
     status,
     dueDate: parseDay(d.dueDate),
+    ...(assignedAt && { assignedAt }),
+    ...(!assigneeId && { assignedAt: null }),
   };
   if (id) await prisma.request.update({ where: { id }, data });
   else await prisma.request.create({ data });
@@ -106,12 +111,16 @@ export async function assignRequest(id: string, assigneeId: string): Promise<Qui
   if (!request) return { error: "notFound" };
 
   if (!assigneeId) {
-    await prisma.request.update({ where: { id }, data: { assigneeId: null, status: "NEW" } });
+    await prisma.request.update({ where: { id }, data: { assigneeId: null, assignedAt: null, status: "NEW" } });
   } else {
     if (!(await activeEmployeeExists(assigneeId))) return { error: "invalid" };
     await prisma.request.update({
       where: { id },
-      data: { assigneeId, status: request.status === "NEW" ? "ASSIGNED" : request.status },
+      data: {
+        assigneeId,
+        status: request.status === "NEW" ? "ASSIGNED" : request.status,
+        ...(assigneeId !== request.assigneeId && { assignedAt: new Date() }),
+      },
     });
   }
   revalidatePath("/", "layout");

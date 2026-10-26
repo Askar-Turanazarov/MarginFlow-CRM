@@ -11,7 +11,7 @@
     "clients": "Clients",
     "requests": "Requests",
     "officePlan": "Office plan",
-    "map": "Map",
+    "map": "City map",
     "reports": "Reports"
   },
   "roles": {
@@ -43,7 +43,34 @@
     "desk": "Your desk",
     "noDesk": "Not assigned",
     "now": "Right now",
-    "staff": "Active staff"
+    "staff": "Active staff",
+    "atDesk": "Desk {desk}",
+    "noDeskShort": "No desk",
+    "lastMark": "Last mark: {time}",
+    "nobodyInOffice": "Nobody is in the office right now",
+    "officeTime": "Office time {time}",
+    "miniMapTitle": "Office now",
+    "openPlan": "Open plan →",
+    "miniMapHint": "Dots are employees in the office. Hover a dot for details. Updates every 3 seconds.",
+    "feedTitle": "Latest events",
+    "stats": {
+      "inOffice": "In office",
+      "outOfOffice": "Out of office",
+      "notArrived": "Not arrived",
+      "late": "Late today",
+      "requestsInWork": "Requests in work",
+      "newRequests": "new: {count}"
+    },
+    "feed": {
+      "CHECK_IN": "Checked in",
+      "EXIT": "Went out",
+      "RETURN": "Back in the office",
+      "END_OF_DAY": "Ended the day",
+      "ASSIGNED": "Request assigned",
+      "late": "{minutes} min late",
+      "onTime": "on time",
+      "empty": "No events yet."
+    }
   },
   "employees": {
     "title": "Employees",
@@ -262,10 +289,16 @@
     "badge": "Simulation"
   },
   "map": {
-    "title": "Map",
-    "hint": "Office, clients and employees outside the office. Updates every 3 seconds.",
+    "title": "City map",
+    "hint": "Office, requests and employees out of the office. Click an employee or a request for details. Updates every 3 seconds.",
     "outside": "Out of office",
-    "nobody": "Nobody is out of the office right now."
+    "nobody": "Nobody is out of the office right now.",
+    "noAssignee": "No assignee",
+    "wentOut": "Left at {time}",
+    "legendOffice": "Office",
+    "legendRequest": "Open requests",
+    "legendPerson": "Employee out of office",
+    "legendClient": "Client without open requests"
   },
   "exitReason": {
     "LUNCH": "Lunch",

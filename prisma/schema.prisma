@@ -140,6 +140,8 @@ model Request {
   status      RequestStatus     @default(NEW)
   assigneeId  String?
   assignee    Employee?         @relation(fields: [assigneeId], references: [id], onDelete: SetNull)
+  // When the current assignee got the request — for the admin activity feed.
+  assignedAt  DateTime?
   dueDate     DateTime?         @db.Date
   events      AttendanceEvent[]
   createdAt   DateTime          @default(now())

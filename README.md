@@ -33,7 +33,8 @@ All people, companies, addresses, phones and e-mails in the demo are **fictional
   - A built-in test plan is shown until an image is uploaded.
 - **3 interface languages**: English, Oʻzbekcha, Русский.
 - **Check-in and end of day**: "I'm here" and "End of work" buttons; arrival after 09:05:59 is late, the admin sees who is late or has not checked in.
-- **City map** of employees who are out of the office (admin and managers), movement simulation for the demo.
+- **Admin home page**: live numbers (in office, out, not arrived, late, requests in work), office mini-map and a feed of latest events.
+- **City map** (admin and managers): office, requests and employees who are out of the office, with a city switcher; movement simulation for the demo.
 - **Reports**: attendance Excel file for a period — sheets "Summary" and "By day".
 - **MCP server for an AI agent** (`mcp-server/`, `npm run mcp`, secret key): where everyone is, find an employee, who was late today, attendance summary, assign a request to a free employee in the office.
 
@@ -147,7 +148,8 @@ Demodagi barcha odamlar, kompaniyalar, manzillar, telefonlar va e-mail’lar **t
   - Rasm yuklanmaguncha ichki test rejasi koʻrsatiladi.
 - **Interfeysning 3 tili**: English, Oʻzbekcha, Русский.
 - **Kelish va kun yakuni**: «Keldim» va «Ishni tugatish» tugmalari; 09:05:59 dan keyin kelish — kechikish, administrator kechikkanlar va belgilanmaganlarni koʻradi.
-- **Shahar xaritasi**: ofisdan tashqaridagi xodimlar (administrator va menejerlar), demo uchun harakat imitatsiyasi.
+- **Administrator bosh sahifasi**: jonli raqamlar (ofisda, tashqarida, kelmaganlar, kechikkanlar, ishdagi arizalar), ofis mini-xaritasi va soʻnggi voqealar lentasi.
+- **Shahar xaritasi** (administrator va menejerlar): ofis, arizalar va ofisdan tashqaridagi xodimlar, shaharlar oʻrtasida almashtirish; demo uchun harakat imitatsiyasi.
 - **Hisobotlar**: davr boʻyicha davomat Excel fayli — «Umumiy» va «Kunlar boʻyicha» varaqlari.
 - **AI-agent uchun MCP server** (`mcp-server/`, `npm run mcp`, maxfiy kalit): hamma qayerda, xodimni topish, bugun kim kechikdi, davomat hisoboti, ofisdagi boʻsh xodimga ariza biriktirish.
 
@@ -261,7 +263,8 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
   - Пока картинка не загружена, показывается встроенный тестовый план.
 - **3 языка интерфейса**: English, Oʻzbekcha, Русский.
 - **Приход и конец дня**: кнопки «Я пришёл» и «Закончить работу»; приход после 09:05:59 — опоздание, админ видит опоздавших и не отметившихся.
-- **Карта города** с сотрудниками вне офиса (админ и менеджеры), имитация движения для демо.
+- **Главная админа**: живые цифры (в офисе, вне офиса, не пришли, опоздали, заявок в работе), мини-карта офиса и лента последних событий.
+- **На карте города** (админ и менеджеры): офис, заявки и сотрудники вне офиса, переключатель городов; имитация движения для демо.
 - **Отчёты**: Excel-файл посещаемости за период — листы «Сводка» и «По дням».
 - **MCP-сервер для ИИ-агента** (`mcp-server/`, `npm run mcp`, секретный ключ): где все сотрудники, поиск сотрудника, кто опоздал сегодня, сводка прихода и ухода, назначение заявки свободному сотруднику в офисе.
 

@@ -201,6 +201,7 @@ async function main() {
           description: r.description,
           status: r.status,
           assigneeId: assignee?.employeeId,
+          assignedAt: assignee ? new Date() : null,
           dueDate: daysFromToday(r.dueInDays),
         },
       });

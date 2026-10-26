@@ -11,7 +11,7 @@
     "clients": "Mijozlar",
     "requests": "Arizalar",
     "officePlan": "Ofis rejasi",
-    "map": "Xarita",
+    "map": "Shahar xaritasi",
     "reports": "Hisobotlar"
   },
   "roles": {
@@ -43,7 +43,34 @@
     "desk": "Ish joyingiz",
     "noDesk": "Biriktirilmagan",
     "now": "Hozir",
-    "staff": "Faol xodimlar"
+    "staff": "Faol xodimlar",
+    "atDesk": "Joy {desk}",
+    "noDeskShort": "Joy yoʻq",
+    "lastMark": "Oxirgi belgi: {time}",
+    "nobodyInOffice": "Hozir ofisda hech kim yoʻq",
+    "officeTime": "Ofis vaqti {time}",
+    "miniMapTitle": "Ofis hozir",
+    "openPlan": "Rejani ochish →",
+    "miniMapHint": "Nuqtalar — ofisdagi xodimlar. Tafsilotlar uchun nuqta ustiga olib boring. Har 3 soniyada yangilanadi.",
+    "feedTitle": "Soʻnggi voqealar",
+    "stats": {
+      "inOffice": "Ofisda",
+      "outOfOffice": "Ofisdan tashqarida",
+      "notArrived": "Kelmaganlar",
+      "late": "Kechikkanlar",
+      "requestsInWork": "Ishdagi arizalar",
+      "newRequests": "yangi: {count}"
+    },
+    "feed": {
+      "CHECK_IN": "Keldi",
+      "EXIT": "Ofisdan chiqdi",
+      "RETURN": "Ofisga qaytdi",
+      "END_OF_DAY": "Kunni yakunladi",
+      "ASSIGNED": "Ariza biriktirildi",
+      "late": "{minutes} daq kechikish",
+      "onTime": "oʻz vaqtida",
+      "empty": "Hozircha voqealar yoʻq."
+    }
   },
   "employees": {
     "title": "Xodimlar",
@@ -262,10 +289,16 @@
     "badge": "Imitatsiya"
   },
   "map": {
-    "title": "Xarita",
-    "hint": "Ofis, mijozlar va ofisdan tashqaridagi xodimlar. Har 3 soniyada yangilanadi.",
+    "title": "Shahar xaritasi",
+    "hint": "Ofis, arizalar va ofisdan tashqaridagi xodimlar. Tafsilotlar uchun xodim yoki arizani bosing. Har 3 soniyada yangilanadi.",
     "outside": "Ofisdan tashqarida",
-    "nobody": "Hozir ofisdan tashqarida hech kim yoʻq."
+    "nobody": "Hozir ofisdan tashqarida hech kim yoʻq.",
+    "noAssignee": "Masʼul yoʻq",
+    "wentOut": "Chiqdi: {time}",
+    "legendOffice": "Ofis",
+    "legendRequest": "Ochiq arizalar",
+    "legendPerson": "Ofisdan tashqaridagi xodim",
+    "legendClient": "Ochiq arizasi yoʻq mijoz"
   },
   "exitReason": {
     "LUNCH": "Tushlik",

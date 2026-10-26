@@ -9,4 +9,4 @@ export const ClientsMap = dynamic(() => import("./clients-map-inner"), { ssr: fa
 export const LocationPicker = dynamic(() => import("./location-picker-inner"), { ssr: false, loading: placeholder });
 export const CityMap = dynamic(() => import("./city-map-inner"), { ssr: false, loading: placeholder });
 export type { ClientPoint } from "./clients-map-inner";
-export type { CityMapPerson, CityMapPlace } from "./city-map-inner";
+export type { CityMapPerson, CityMapPlace, MapBounds } from "./city-map-inner";
