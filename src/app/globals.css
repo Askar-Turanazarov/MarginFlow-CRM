@@ -55,6 +55,7 @@
 
   --animate-breathe: breathe 2.8s ease-in-out infinite;
   --animate-skeleton: skeleton 1.6s ease-in-out infinite;
+  --animate-rise: rise 0.7s var(--ease-out-soft) both;
 }
 
 /* ---------- Light: warm "milk" surfaces, no pure white, no pure black ---------- */
@@ -273,6 +274,9 @@ html[data-lens] .lens {
   0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, currentColor 35%, transparent); }
   50% { box-shadow: 0 0 0 5px color-mix(in oklab, currentColor 0%, transparent); }
 }
+@keyframes rise {
+  from { opacity: 0; translate: 0 14px; filter: blur(4px); }
+}
 @keyframes skeleton {
   0%, 100% { opacity: 0.4; }
   50% { opacity: 0.7; }
@@ -333,4 +337,146 @@ html[data-lens] .lens {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ---------- City map (Leaflet): glass controls and popups, token markers, calm dark tiles ---------- */
+.leaflet-container {
+  font: inherit;
+  background: var(--muted);
+}
+.dark .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.88) contrast(0.86) saturate(0.55);
+}
+.leaflet-container .leaflet-popup-content-wrapper,
+.leaflet-container .leaflet-tooltip,
+.leaflet-container .leaflet-bar a,
+.leaflet-container .leaflet-control-attribution {
+  background: var(--popover) !important;
+  color: var(--popover-foreground) !important;
+  backdrop-filter: blur(24px) saturate(1.8) !important;
+}
+.leaflet-container .leaflet-popup-content-wrapper {
+  border-radius: 1rem;
+  box-shadow: var(--shadow-overlay), inset 0 1px 0 var(--glass-hi);
+  border: 1px solid var(--border);
+}
+.leaflet-container .leaflet-popup-content {
+  margin: 0.75rem 0.9rem;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+.leaflet-container .leaflet-popup-tip {
+  background: var(--popover);
+  box-shadow: none;
+}
+.leaflet-popup {
+  animation: map-pop 0.35s var(--ease-spring);
+  transform-origin: bottom center;
+}
+.leaflet-container a.leaflet-popup-close-button {
+  color: var(--muted-foreground);
+  top: 6px;
+  right: 6px;
+}
+.leaflet-container .leaflet-tooltip {
+  border: 1px solid var(--border);
+  border-radius: 0.6rem;
+  box-shadow: var(--shadow-glass);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.2rem 0.55rem;
+}
+.leaflet-container .leaflet-tooltip::before {
+  display: none;
+}
+.leaflet-container .leaflet-bar {
+  border: 1px solid var(--border) !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-glass) !important;
+}
+.leaflet-container .leaflet-bar a {
+  border-color: var(--border) !important;
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+.leaflet-container .leaflet-control-attribution {
+  border-radius: 0.5rem 0 0 0;
+  font-size: 10px;
+  opacity: 0.85;
+}
+.leaflet-container .leaflet-control-attribution a {
+  color: inherit !important;
+}
+@keyframes map-pop {
+  from { opacity: 0; scale: 0.85; }
+}
+
+.map-person span,
+.map-office span {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.map-person span {
+  background: oklch(0.9 0.05 var(--hue));
+  color: oklch(0.38 0.09 var(--hue));
+  box-shadow: 0 0 0 2.5px var(--sig-out), 0 0 0 4px rgb(255 255 255 / 0.85), 0 4px 10px -2px rgb(0 0 0 / 0.35);
+  transition: scale 0.35s var(--ease-spring);
+}
+.dark .map-person span {
+  background: oklch(0.38 0.06 var(--hue));
+  color: oklch(0.92 0.04 var(--hue));
+  box-shadow: 0 0 0 2.5px var(--sig-out), 0 0 0 4px rgb(20 22 22 / 0.9), 0 4px 10px -2px rgb(0 0 0 / 0.6);
+}
+.map-person:hover span {
+  scale: 1.15;
+}
+/* People glide to their new point (positions arrive every 3 s), but not while the map zooms. */
+.leaflet-marker-icon.map-person {
+  transition: transform 2.8s linear;
+}
+.leaflet-zoom-anim .leaflet-marker-icon.map-person {
+  transition: none;
+}
+.map-office span {
+  color: var(--primary-foreground);
+  background: var(--primary) linear-gradient(180deg, rgb(255 255 255 / 0.2), transparent 60%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3), 0 0 0 3px color-mix(in oklab, var(--primary) 25%, transparent), 0 6px 14px -4px rgb(0 0 0 / 0.4);
+}
+.map-dot {
+  border-radius: 9999px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  transition: scale 0.3s var(--ease-spring);
+}
+.map-dot:hover {
+  scale: 1.25;
+}
+.map-dot-request {
+  background: var(--sig-info);
+  border: 2.5px solid rgb(255 255 255 / 0.9);
+}
+.map-dot-client {
+  background: var(--card);
+  border: 2px solid var(--sig-off);
+}
+.map-pick span {
+  display: block;
+  width: 28px;
+  height: 28px;
+  border-radius: 50% 50% 50% 0;
+  rotate: -45deg;
+  background: var(--primary);
+  box-shadow: inset 0 0 0 8px var(--primary), inset 0 0 0 14px var(--primary-foreground), 0 4px 10px -2px rgb(0 0 0 / 0.4);
+  animation: map-drop 0.5s var(--ease-spring);
+}
+@keyframes map-drop {
+  from { translate: 0 -14px; opacity: 0; }
 }

@@ -1,9 +1,12 @@
 import type { Prisma } from "@prisma/client";
+import { Building2, MapPin, MapPinOff, Pencil, Phone, Plus } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ClientsMap, type ClientPoint } from "@/components/map";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { EmptyState, ListCard, PageHeader, ResponsiveList } from "@/components/page";
+import { SearchField } from "@/components/search-field";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { Reveal } from "@/components/ui/reveal";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
@@ -44,38 +47,46 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
       : [],
   );
 
+  const openRequests = (n: number) => (n > 0 ? <Badge variant="info">{n}</Badge> : <span className="text-muted-foreground">—</span>);
+  const phoneLink = (phone: string) => (
+    <a href={`tel:${phone.replace(/[^\d+]/g, "")}`} className="nums transition-colors hover:text-primary">
+      {phone}
+    </a>
+  );
+
   return (
-    <div className="grid gap-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold">{t("clients.title")}</h1>
-        <span className="text-muted-foreground">{clients.length}</span>
-        {canEdit && (
-          <Link href="/clients/new" className={`${buttonVariants()} ml-auto`}>
-            {t("clients.add")}
-          </Link>
-        )}
-      </div>
+    <div className="grid gap-5">
+      <PageHeader
+        title={t("clients.title")}
+        count={clients.length}
+        actions={
+          canEdit && (
+            <Link href="/clients/new" className={buttonVariants()}>
+              <Plus />
+              {t("clients.add")}
+            </Link>
+          )
+        }
+      />
 
-      <form className="flex max-w-md gap-2">
-        <Input name="q" defaultValue={q} placeholder={t("clients.search")} />
-        <Button type="submit" variant="outline">
-          {t("clients.find")}
-        </Button>
-      </form>
+      <SearchField placeholder={t("clients.search")} defaultValue={q} />
 
-      <div className="h-80 overflow-hidden rounded-xl border">
-        <ClientsMap points={points} />
-      </div>
+      <Reveal index={1}>
+        <div className="glass h-72 overflow-hidden rounded-2xl p-1.5 sm:h-80">
+          <div className="isolate h-full overflow-hidden rounded-[0.875rem]">
+            <ClientsMap points={points} />
+          </div>
+        </div>
+      </Reveal>
 
-      <Card>
-        <CardContent>
+      <ResponsiveList
+        empty={clients.length === 0 && <EmptyState icon={Building2} text={t("clients.empty")} className="surface rounded-2xl" />}
+        table={
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>{t("clients.company")}</TableHead>
-                <TableHead>{t("clients.contact")}</TableHead>
                 <TableHead>{t("clients.phone")}</TableHead>
-                <TableHead>{t("clients.city")}</TableHead>
                 <TableHead>{t("clients.address")}</TableHead>
                 <TableHead>{t("clients.requests")}</TableHead>
                 {canEdit && <TableHead />}
@@ -84,35 +95,68 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
             <TableBody>
               {clients.map((c) => (
                 <TableRow key={c.id}>
-                  <TableCell className="font-medium">{c.companyName}</TableCell>
-                  <TableCell>{c.contactName}</TableCell>
-                  <TableCell className="whitespace-nowrap">{c.phone}</TableCell>
-                  <TableCell>{c.city}</TableCell>
-                  <TableCell className="max-w-64 truncate" title={c.address ?? undefined}>
-                    {c.address}
-                    {c.lat === null && <span className="text-xs text-muted-foreground"> · {t("clients.noLocation")}</span>}
+                  <TableCell>
+                    <div className="font-medium">{c.companyName}</div>
+                    <div className="text-xs text-muted-foreground">{c.contactName}</div>
                   </TableCell>
-                  <TableCell>{c._count.requests}</TableCell>
+                  <TableCell>{c.phone && phoneLink(c.phone)}</TableCell>
+                  <TableCell className="max-w-72">
+                    <div className="truncate" title={c.address ?? undefined}>
+                      {c.city}
+                      {c.address && <span className="text-muted-foreground"> · {c.address}</span>}
+                    </div>
+                    {c.lat === null && (
+                      <div className="mt-0.5 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPinOff className="size-3" />
+                        {t("clients.noLocation")}
+                      </div>
+                    )}
+                  </TableCell>
+                  <TableCell>{openRequests(c._count.requests)}</TableCell>
                   {canEdit && (
                     <TableCell className="text-right">
-                      <Link href={`/clients/${c.id}/edit`} className={buttonVariants({ variant: "outline", size: "sm" })}>
+                      <Link href={`/clients/${c.id}/edit`} className={buttonVariants({ variant: "ghost", size: "sm" })}>
+                        <Pencil />
                         {t("common.edit")}
                       </Link>
                     </TableCell>
                   )}
                 </TableRow>
               ))}
-              {clients.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={7} className="text-center text-muted-foreground">
-                    {t("clients.empty")}
-                  </TableCell>
-                </TableRow>
-              )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        }
+        cards={clients.map((c) => (
+          <ListCard key={c.id}>
+            <div className="flex items-start gap-3">
+              <div className="min-w-0 flex-1">
+                <div className="truncate font-medium">{c.companyName}</div>
+                <div className="truncate text-xs text-muted-foreground">{c.contactName}</div>
+              </div>
+              {openRequests(c._count.requests)}
+              {canEdit && (
+                <Link href={`/clients/${c.id}/edit`} className={buttonVariants({ variant: "ghost", size: "icon" })} aria-label={t("common.edit")}>
+                  <Pencil />
+                </Link>
+              )}
+            </div>
+            <div className="grid gap-1.5 text-sm">
+              {c.phone && (
+                <span className="inline-flex items-center gap-2">
+                  <Phone className="size-3.5 text-muted-foreground" />
+                  {phoneLink(c.phone)}
+                </span>
+              )}
+              {(c.city || c.address) && (
+                <span className="inline-flex min-w-0 items-center gap-2 text-muted-foreground">
+                  {c.lat === null ? <MapPinOff className="size-3.5 shrink-0" /> : <MapPin className="size-3.5 shrink-0" />}
+                  <span className="truncate">{[c.city, c.address].filter(Boolean).join(" · ")}</span>
+                </span>
+              )}
+            </div>
+          </ListCard>
+        ))}
+      />
     </div>
   );
 }

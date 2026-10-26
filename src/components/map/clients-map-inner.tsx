@@ -2,7 +2,8 @@
 
 import "leaflet/dist/leaflet.css";
 import { latLngBounds } from "leaflet";
-import { CircleMarker, MapContainer, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { clientIcon } from "./markers";
 import { OSM_ATTRIBUTION, OSM_TILES } from "./osm";
 
 export type ClientPoint = { id: string; companyName: string; city: string | null; lat: number; lng: number; href?: string };
@@ -21,15 +22,10 @@ export default function ClientsMapInner({ points }: { points: ClientPoint[] }) {
     >
       <TileLayer url={OSM_TILES} attribution={OSM_ATTRIBUTION} />
       {points.map((p) => (
-        <CircleMarker
-          key={p.id}
-          center={[p.lat, p.lng]}
-          radius={8}
-          pathOptions={{ color: "#1d4ed8", fillColor: "#3b82f6", fillOpacity: 0.85, weight: 2 }}
-        >
+        <Marker key={p.id} position={[p.lat, p.lng]} icon={clientIcon(true)}>
           <Popup>
             {p.href ? (
-              <a href={p.href} className="font-medium">
+              <a href={p.href} className="font-medium text-primary">
                 {p.companyName}
               </a>
             ) : (
@@ -37,7 +33,7 @@ export default function ClientsMapInner({ points }: { points: ClientPoint[] }) {
             )}
             {p.city && <div>{p.city}</div>}
           </Popup>
-        </CircleMarker>
+        </Marker>
       ))}
     </MapContainer>
   );

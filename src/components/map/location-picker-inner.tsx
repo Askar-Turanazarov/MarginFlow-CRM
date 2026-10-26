@@ -4,9 +4,10 @@ import "leaflet/dist/leaflet.css";
 import type { Map as LeafletMap } from "leaflet";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { CircleMarker, MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMapEvents } from "react-leaflet";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { pickIcon } from "./markers";
 import { OSM_ATTRIBUTION, OSM_TILES } from "./osm";
 
 type Point = { lat: number; lng: number };
@@ -65,7 +66,7 @@ export default function LocationPickerInner({ initial, query }: { initial: Point
       </div>
       {status === "notFound" && <p className="text-xs text-destructive">{t("notFound")}</p>}
 
-      <div className="h-72 overflow-hidden rounded-lg border">
+      <div className="isolate h-72 overflow-hidden rounded-xl border border-border/70 sm:h-80">
         <MapContainer
           ref={setMap}
           center={initial ? [initial.lat, initial.lng] : [37.44, -122.14]}
@@ -74,18 +75,12 @@ export default function LocationPickerInner({ initial, query }: { initial: Point
         >
           <TileLayer url={OSM_TILES} attribution={OSM_ATTRIBUTION} />
           <ClickToSet onPick={pick} />
-          {point && (
-            <CircleMarker
-              center={[point.lat, point.lng]}
-              radius={9}
-              pathOptions={{ color: "#b91c1c", fillColor: "#ef4444", fillOpacity: 0.9, weight: 2 }}
-            />
-          )}
+          {point && <Marker key={`${point.lat},${point.lng}`} position={[point.lat, point.lng]} icon={pickIcon()} />}
         </MapContainer>
       </div>
 
       <div className="flex items-center gap-3 text-xs text-muted-foreground">
-        <span>{point ? `${point.lat}, ${point.lng}` : t("locationHint")}</span>
+        <span className="nums">{point ? `${point.lat}, ${point.lng}` : t("locationHint")}</span>
         {point && (
           <Button type="button" variant="ghost" size="sm" onClick={() => setPoint(null)}>
             {t("clearPoint")}

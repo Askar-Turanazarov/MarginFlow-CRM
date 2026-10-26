@@ -33,7 +33,9 @@
     "submitting": "Входим…",
     "invalid": "Неверный логин или пароль",
     "devTitle": "Быстрый вход (локальное тестирование)",
-    "devHint": "Только при npm run dev на localhost. Пароль не нужен."
+    "devHint": "Только при npm run dev на localhost. Пароль не нужен.",
+    "showPassword": "Показать пароль",
+    "hidePassword": "Скрыть пароль"
   },
   "dashboard": {
     "title": "Главная",
@@ -126,7 +128,9 @@
       "deskTaken": "Это место уже занято",
       "selfDeactivate": "Нельзя отключить свою учётную запись",
       "notFound": "Сотрудник не найден"
-    }
+    },
+    "sectionPerson": "Сотрудник",
+    "sectionAccess": "Вход и рабочее место"
   },
   "common": {
     "save": "Сохранить",
@@ -136,7 +140,8 @@
     "edit": "Изменить",
     "all": "Все",
     "none": "—",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "clear": "Очистить"
   },
   "clients": {
     "title": "Клиенты",
@@ -176,7 +181,9 @@
       "required": "Обязательное поле",
       "email": "Неверный e-mail",
       "notFound": "Клиент не найден"
-    }
+    },
+    "sectionCompany": "Компания и контакт",
+    "sectionAddress": "Адрес"
   },
   "requestStatus": {
     "NEW": "Новая",
@@ -195,7 +202,11 @@
     "overdue": "Просрочена",
     "notAssigned": "Не назначен",
     "empty": "Заявок нет",
-    "mine": "Показаны только ваши заявки"
+    "mine": "Показаны только ваши заявки",
+    "toast": {
+      "assigned": "Ответственный назначен",
+      "statusChanged": "Статус обновлён"
+    }
   },
   "requestForm": {
     "createTitle": "Новая заявка",
@@ -214,7 +225,9 @@
       "assigneeRequired": "Для этого статуса нужен ответственный",
       "forbidden": "Вы не можете менять эту заявку",
       "notFound": "Заявка не найдена"
-    }
+    },
+    "sectionWhat": "Что сделать",
+    "sectionWho": "Кто и когда"
   },
   "zoneKind": {
     "KITCHEN": "Кухня",
@@ -261,7 +274,14 @@
       "fileSize": "Файл больше 5 МБ",
       "notFound": "Не найдено"
     },
-    "personNow": "Сотрудник сейчас"
+    "personNow": "Сотрудник сейчас",
+    "tools": "Инструменты плана",
+    "saved": "Сохранено",
+    "deleted": "Удалено",
+    "uploaded": "Картинка плана обновлена",
+    "chooseFile": "Выберите картинку",
+    "deleteDesk": "Удалить место {code}?",
+    "deleteZone": "Удалить зону «{name}»?"
   },
   "attendance": {
     "checkInHint": "Рабочий день начинается в {start}. Приход до {lastOnTime} — вовремя, позже — опоздание.",
@@ -342,7 +362,14 @@
     "attendanceHint": "Выберите период: в Excel-файле два листа — «Сводка» и «По дням».",
     "from": "С",
     "to": "По",
-    "download": "Скачать отчёт в Excel"
+    "download": "Скачать отчёт в Excel",
+    "period": "Период",
+    "presets": {
+      "thisWeek": "Эта неделя",
+      "thisMonth": "Этот месяц",
+      "lastMonth": "Прошлый месяц",
+      "custom": "Свои даты"
+    }
   },
   "report": {
     "sheetSummary": "Сводка",

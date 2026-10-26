@@ -47,7 +47,7 @@ function useScrolled() {
   return scrolled;
 }
 
-function BrandMark() {
+export function BrandMark() {
   return (
     <span className="flex size-9 shrink-0 items-center justify-center rounded-xl bg-primary bg-[linear-gradient(160deg,rgb(255_255_255/.25),transparent_60%)] text-primary-foreground shadow-[inset_0_1px_0_rgb(255_255_255/.3),0_4px_10px_-4px_color-mix(in_oklab,var(--primary)_70%,transparent)]">
       <svg viewBox="0 0 24 24" className="size-5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

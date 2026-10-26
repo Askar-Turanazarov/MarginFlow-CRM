@@ -1,11 +1,11 @@
 import { formatInTimeZone } from "date-fns-tz";
 import { getLocale, getTranslations } from "next-intl/server";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { FileSpreadsheet } from "lucide-react";
+import { PageHeader } from "@/components/page";
+import { Reveal } from "@/components/ui/reveal";
 import { getOfficeSettings } from "@/lib/attendance";
 import { requireUser } from "@/lib/session";
+import { ReportForm } from "./report-form";
 
 export default async function ReportsPage() {
   await requireUser(["ADMIN", "MANAGER"]);
@@ -13,38 +13,26 @@ export default async function ReportsPage() {
   const locale = await getLocale();
   const { timezone } = await getOfficeSettings();
 
-  // Default period: from the 1st of the current month to today (office time).
+  // "Today" in office time; the form counts quick periods from it.
   const today = formatInTimeZone(new Date(), timezone, "yyyy-MM-dd");
-  const monthStart = `${today.slice(0, 8)}01`;
 
   return (
-    <div className="grid max-w-xl gap-4">
-      <h1 className="text-2xl font-semibold">{t("title")}</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("attendanceTitle")}</CardTitle>
-          <CardDescription>{t("attendanceHint")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          {/* A plain GET form: the browser downloads the .xlsx file. */}
-          <form method="get" action="/api/reports/attendance.xlsx" className="grid gap-4" data-testid="report-form">
-            <input type="hidden" name="locale" value={locale} />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="grid gap-1.5">
-                <Label htmlFor="from">{t("from")}</Label>
-                <Input id="from" name="from" type="date" required defaultValue={monthStart} />
-              </div>
-              <div className="grid gap-1.5">
-                <Label htmlFor="to">{t("to")}</Label>
-                <Input id="to" name="to" type="date" required defaultValue={today} />
-              </div>
-            </div>
+    <div className="grid max-w-2xl gap-5">
+      <PageHeader title={t("title")} />
+      <Reveal index={1}>
+        <section className="surface rounded-2xl p-5 sm:p-7">
+          <div className="mb-6 flex items-start gap-4">
+            <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-sig-in/12 text-sig-in shadow-[inset_0_1px_0_var(--glass-hi)]">
+              <FileSpreadsheet className="size-5" />
+            </span>
             <div>
-              <Button type="submit">{t("download")}</Button>
+              <h2 className="font-semibold">{t("attendanceTitle")}</h2>
+              <p className="mt-0.5 text-sm text-muted-foreground">{t("attendanceHint")}</p>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+          </div>
+          <ReportForm today={today} locale={locale} />
+        </section>
+      </Reveal>
     </div>
   );
 }

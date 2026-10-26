@@ -33,7 +33,9 @@
     "submitting": "Kirilmoqda…",
     "invalid": "Login yoki parol notoʻgʻri",
     "devTitle": "Tezkor kirish (lokal sinov)",
-    "devHint": "Faqat localhost da npm run dev ishlaganda. Parol kerak emas."
+    "devHint": "Faqat localhost da npm run dev ishlaganda. Parol kerak emas.",
+    "showPassword": "Parolni koʻrsatish",
+    "hidePassword": "Parolni yashirish"
   },
   "dashboard": {
     "title": "Bosh sahifa",
@@ -126,7 +128,9 @@
       "deskTaken": "Bu ish joyi band",
       "selfDeactivate": "Oʻz hisobingizni oʻchira olmaysiz",
       "notFound": "Xodim topilmadi"
-    }
+    },
+    "sectionPerson": "Xodim",
+    "sectionAccess": "Kirish va ish joyi"
   },
   "common": {
     "save": "Saqlash",
@@ -136,7 +140,8 @@
     "edit": "Tahrirlash",
     "all": "Hammasi",
     "none": "—",
-    "close": "Yopish"
+    "close": "Yopish",
+    "clear": "Tozalash"
   },
   "clients": {
     "title": "Mijozlar",
@@ -176,7 +181,9 @@
       "required": "Majburiy maydon",
       "email": "E-mail notoʻgʻri",
       "notFound": "Mijoz topilmadi"
-    }
+    },
+    "sectionCompany": "Kompaniya va aloqa",
+    "sectionAddress": "Manzil"
   },
   "requestStatus": {
     "NEW": "Yangi",
@@ -195,7 +202,11 @@
     "overdue": "Muddati oʻtgan",
     "notAssigned": "Biriktirilmagan",
     "empty": "Arizalar yoʻq",
-    "mine": "Faqat sizga biriktirilgan arizalar koʻrsatilgan"
+    "mine": "Faqat sizga biriktirilgan arizalar koʻrsatilgan",
+    "toast": {
+      "assigned": "Masʼul tayinlandi",
+      "statusChanged": "Holat yangilandi"
+    }
   },
   "requestForm": {
     "createTitle": "Yangi ariza",
@@ -214,7 +225,9 @@
       "assigneeRequired": "Bu holat uchun masʼul kerak",
       "forbidden": "Siz bu arizani oʻzgartira olmaysiz",
       "notFound": "Ariza topilmadi"
-    }
+    },
+    "sectionWhat": "Nima qilish kerak",
+    "sectionWho": "Kim va qachon"
   },
   "zoneKind": {
     "KITCHEN": "Oshxona",
@@ -261,7 +274,14 @@
       "fileSize": "Fayl 5 MB dan katta",
       "notFound": "Topilmadi"
     },
-    "personNow": "Xodim hozir"
+    "personNow": "Xodim hozir",
+    "tools": "Reja asboblari",
+    "saved": "Saqlandi",
+    "deleted": "Oʻchirildi",
+    "uploaded": "Reja rasmi yangilandi",
+    "chooseFile": "Rasm tanlang",
+    "deleteDesk": "{code}-joy oʻchirilsinmi?",
+    "deleteZone": "“{name}” zonasi oʻchirilsinmi?"
   },
   "attendance": {
     "checkInHint": "Ish kuni {start} da boshlanadi. {lastOnTime} gacha kelish — oʻz vaqtida, keyin — kechikish.",
@@ -342,7 +362,14 @@
     "attendanceHint": "Davrni tanlang: Excel faylida ikki varaq bor — «Umumiy» va «Kunlar boʻyicha».",
     "from": "Dan",
     "to": "Gacha",
-    "download": "Excel hisobotini yuklab olish"
+    "download": "Excel hisobotini yuklab olish",
+    "period": "Davr",
+    "presets": {
+      "thisWeek": "Shu hafta",
+      "thisMonth": "Shu oy",
+      "lastMonth": "Oʻtgan oy",
+      "custom": "Oʻz sanalari"
+    }
   },
   "report": {
     "sheetSummary": "Umumiy",

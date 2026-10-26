@@ -3,10 +3,10 @@
 import type { RequestStatus } from "@prisma/client";
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
+import { Field, FormActions, FormError, FormSection, SubmitButton, textareaClass } from "@/components/form-field";
 import { NativeSelect } from "@/components/native-select";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Link } from "@/i18n/navigation";
 import { saveRequest, type RequestField, type RequestFormState, type RequestFormValues } from "./actions";
 import type { AssigneeOption } from "./request-controls";
@@ -27,90 +27,70 @@ export function RequestForm({ id, initial, clients, employees }: Props) {
 
   const error = (field: RequestField) => {
     const key = state.fieldErrors?.[field];
-    return key ? <p className="text-xs text-destructive">{t(`requestForm.errors.${key}`)}</p> : null;
+    return key && t(`requestForm.errors.${key}`);
   };
   const invalid = (field: RequestField) => (state.fieldErrors?.[field] ? true : undefined);
 
   return (
-    <form key={state.attempt ?? 0} action={action} className="grid max-w-xl gap-4">
+    <form key={state.attempt ?? 0} action={action} className="surface grid max-w-2xl gap-7 rounded-2xl p-5 sm:p-7">
       {id && <input type="hidden" name="id" value={id} />}
 
-      <div className="grid gap-2">
-        <Label htmlFor="clientId">{t("requestForm.client")}</Label>
-        <NativeSelect id="clientId" name="clientId" defaultValue={v.clientId} aria-invalid={invalid("clientId")} required>
-          <option value="">{t("requestForm.chooseClient")}</option>
-          {clients.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.companyName}
-              {c.city ? ` · ${c.city}` : ""}
-            </option>
-          ))}
-        </NativeSelect>
-        {error("clientId")}
-      </div>
-
-      <div className="grid gap-2">
-        <Label htmlFor="title">{t("requestForm.title")}</Label>
-        <Input id="title" name="title" defaultValue={v.title} aria-invalid={invalid("title")} required />
-        {error("title")}
-      </div>
-
-      <div className="grid gap-2">
-        <Label htmlFor="description">{t("requestForm.description")}</Label>
-        <textarea
-          id="description"
-          name="description"
-          rows={4}
-          defaultValue={v.description}
-          className="rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-        />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="grid gap-2">
-          <Label htmlFor="assigneeId">{t("requestForm.assignee")}</Label>
-          <NativeSelect id="assigneeId" name="assigneeId" defaultValue={v.assigneeId} aria-invalid={invalid("assigneeId")}>
-            <option value="">{t("requests.notAssigned")}</option>
-            {employees.map((e) => (
-              <option key={e.id} value={e.id}>
-                {e.name}
+      <FormSection title={t("requestForm.sectionWhat")}>
+        <Field label={t("requestForm.client")} htmlFor="clientId" error={error("clientId")}>
+          <NativeSelect id="clientId" name="clientId" defaultValue={v.clientId} aria-invalid={invalid("clientId")} required>
+            <option value="">{t("requestForm.chooseClient")}</option>
+            {clients.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.companyName}
+                {c.city ? ` · ${c.city}` : ""}
               </option>
             ))}
           </NativeSelect>
-          {error("assigneeId")}
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="status">{t("requestForm.status")}</Label>
-          <NativeSelect id="status" name="status" defaultValue={v.status}>
-            {STATUSES.map((s) => (
-              <option key={s} value={s}>
-                {t(`requestStatus.${s}`)}
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="dueDate">{t("requestForm.dueDate")}</Label>
-          <Input id="dueDate" name="dueDate" type="date" defaultValue={v.dueDate} aria-invalid={invalid("dueDate")} />
-          {error("dueDate")}
-        </div>
-      </div>
-      <p className="text-xs text-muted-foreground">{t("requestForm.statusHint")}</p>
+        </Field>
+        <Field label={t("requestForm.title")} htmlFor="title" error={error("title")}>
+          <Input id="title" name="title" defaultValue={v.title} aria-invalid={invalid("title")} autoFocus={!id && !!v.clientId} required />
+        </Field>
+        <Field label={t("requestForm.description")} htmlFor="description">
+          <textarea id="description" name="description" rows={4} defaultValue={v.description} className={textareaClass} />
+        </Field>
+      </FormSection>
 
-      {state.error && (
-        <p role="alert" className="text-sm text-destructive">
-          {t(`requestForm.errors.${state.error}`)}
-        </p>
-      )}
+      <FormSection title={t("requestForm.sectionWho")}>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <Field label={t("requestForm.assignee")} htmlFor="assigneeId" error={error("assigneeId")}>
+            <NativeSelect id="assigneeId" name="assigneeId" defaultValue={v.assigneeId} aria-invalid={invalid("assigneeId")}>
+              <option value="">{t("requests.notAssigned")}</option>
+              {employees.map((e) => (
+                <option key={e.id} value={e.id}>
+                  {e.name}
+                </option>
+              ))}
+            </NativeSelect>
+          </Field>
+          <Field label={t("requestForm.status")} htmlFor="status">
+            <NativeSelect id="status" name="status" defaultValue={v.status}>
+              {STATUSES.map((s) => (
+                <option key={s} value={s}>
+                  {t(`requestStatus.${s}`)}
+                </option>
+              ))}
+            </NativeSelect>
+          </Field>
+          <Field label={t("requestForm.dueDate")} htmlFor="dueDate" error={error("dueDate")}>
+            <Input id="dueDate" name="dueDate" type="date" defaultValue={v.dueDate} aria-invalid={invalid("dueDate")} className="nums" />
+          </Field>
+        </div>
+        <p className="text-xs text-muted-foreground">{t("requestForm.statusHint")}</p>
+      </FormSection>
 
-      <div className="flex gap-2">
-        <Button type="submit" disabled={pending}>
-          {pending ? t("common.saving") : t("common.save")}
-        </Button>
-        <Link href="/requests" className={buttonVariants({ variant: "outline" })}>
+      <FormError>{state.error && t(`requestForm.errors.${state.error}`)}</FormError>
+
+      <FormActions>
+        <SubmitButton pending={pending}>{pending ? t("common.saving") : t("common.save")}</SubmitButton>
+        <Link href="/requests" className={buttonVariants({ variant: "ghost" })}>
           {t("common.cancel")}
         </Link>
-      </div>
+      </FormActions>
     </form>
   );
 }

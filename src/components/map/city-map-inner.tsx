@@ -2,10 +2,11 @@
 
 import "leaflet/dist/leaflet.css";
 import { useEffect } from "react";
-import { CircleMarker, MapContainer, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer, Tooltip, useMap } from "react-leaflet";
+import { clientIcon, officeIcon, personIcon } from "./markers";
 import { OSM_ATTRIBUTION, OSM_TILES } from "./osm";
 
-export type CityMapPerson = { id: string; initials: string; lat: number; lng: number; popup: React.ReactNode };
+export type CityMapPerson = { id: string; name: string; initials: string; lat: number; lng: number; popup: React.ReactNode };
 export type CityMapPlace = { id: string; label: string; lat: number; lng: number; popup?: React.ReactNode };
 export type MapBounds = [[number, number], [number, number]];
 
@@ -31,56 +32,33 @@ function FitBounds({ bounds }: { bounds?: MapBounds }) {
   return null;
 }
 
-/** Office, requests and employees outside the office. Markers move when new positions arrive. */
+/** Office, requests and employees outside the office. People glide to new positions as they arrive. */
 export default function CityMapInner({ office, requests, clients = [], people, bounds }: Props) {
   return (
     <MapContainer center={[office.lat, office.lng]} zoom={11} scrollWheelZoom={false} className="h-full w-full">
       <TileLayer url={OSM_TILES} attribution={OSM_ATTRIBUTION} />
       <FitBounds bounds={bounds} />
       {clients.map((c) => (
-        <CircleMarker
-          key={c.id}
-          center={[c.lat, c.lng]}
-          radius={5}
-          pathOptions={{ color: "#94a3b8", fillColor: "#e2e8f0", fillOpacity: 0.9, weight: 2 }}
-        >
-          <Tooltip>{c.label}</Tooltip>
-        </CircleMarker>
+        <Marker key={c.id} position={[c.lat, c.lng]} icon={clientIcon(false)}>
+          <Tooltip direction="top">{c.label}</Tooltip>
+        </Marker>
       ))}
       {requests.map((r) => (
-        <CircleMarker
-          key={r.id}
-          center={[r.lat, r.lng]}
-          radius={8}
-          pathOptions={{ color: "#1d4ed8", fillColor: "#3b82f6", fillOpacity: 0.85, weight: 2 }}
-        >
-          <Tooltip direction="top" offset={[0, -6]}>
-            {r.label}
-          </Tooltip>
+        <Marker key={r.id} position={[r.lat, r.lng]} icon={clientIcon(true)}>
+          <Tooltip direction="top">{r.label}</Tooltip>
           {r.popup && <Popup>{r.popup}</Popup>}
-        </CircleMarker>
+        </Marker>
       ))}
-      <CircleMarker
-        center={[office.lat, office.lng]}
-        radius={11}
-        pathOptions={{ color: "#6d28d9", fillColor: "#8b5cf6", fillOpacity: 0.9, weight: 3 }}
-      >
-        <Tooltip permanent direction="top" offset={[0, -10]}>
+      <Marker position={[office.lat, office.lng]} icon={officeIcon()} zIndexOffset={500}>
+        <Tooltip permanent direction="top">
           {office.label}
         </Tooltip>
-      </CircleMarker>
+      </Marker>
       {people.map((p) => (
-        <CircleMarker
-          key={p.id}
-          center={[p.lat, p.lng]}
-          radius={9}
-          pathOptions={{ color: "#b45309", fillColor: "#f59e0b", fillOpacity: 0.95, weight: 2 }}
-        >
-          <Tooltip permanent direction="right" offset={[8, 0]}>
-            {p.initials}
-          </Tooltip>
+        <Marker key={p.id} position={[p.lat, p.lng]} icon={personIcon(p.id, p.initials)} zIndexOffset={1000}>
+          <Tooltip direction="top">{p.name}</Tooltip>
           <Popup>{p.popup}</Popup>
-        </CircleMarker>
+        </Marker>
       ))}
     </MapContainer>
   );

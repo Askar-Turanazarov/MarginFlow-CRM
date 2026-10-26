@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { PageHeader } from "@/components/page";
 import { getPlanImage } from "@/lib/office-plan";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
@@ -44,13 +45,8 @@ export default async function OfficePlanPage() {
   const occupied = desks.filter((d) => d.employee).length;
 
   return (
-    <div className="grid gap-4">
-      <div className="flex flex-wrap items-baseline gap-3">
-        <h1 className="text-2xl font-semibold">{t("title")}</h1>
-        <span className="text-sm text-muted-foreground">
-          {t("stats", { total: desks.length, occupied, free: desks.length - occupied })}
-        </span>
-      </div>
+    <div className="grid gap-5">
+      <PageHeader title={t("title")} description={t("stats", { total: desks.length, occupied, free: desks.length - occupied })} />
       <OfficePlanEditor
         desks={deskViews}
         zones={zoneViews}

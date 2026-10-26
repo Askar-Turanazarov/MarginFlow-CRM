@@ -37,9 +37,8 @@ All people, companies, addresses, phones and e-mails in the demo are **fictional
 - **City map** (admin and managers): office, requests and employees who are out of the office, with a city switcher; movement simulation for the demo.
 - **Reports**: attendance Excel file for a period — sheets "Summary" and "By day".
 - **MCP server for an AI agent** (`mcp-server/`, `npm run mcp`, secret key): where everyone is, find an employee, who was late today, attendance summary, assign a request to a free employee in the office.
-
-**Planned** (see [docs/SPEC.md](docs/SPEC.md))
-- Exit with a reason / return during the day.
+- **Exit with a reason and return**: lunch, client visit (linked to a request), meeting, personal, other, end of day; "I'm back" in one tap.
+- **Interface "Human Liquid Glass"**: blurred office backdrop, glass panels, emerald accent, light/dark/system theme, soft spring motion, Ctrl+K command palette, phone layout with a bottom tab bar (details — [docs/SPEC.md §9](docs/SPEC.md)).
 
 ### Tech stack
 
@@ -152,9 +151,8 @@ Demodagi barcha odamlar, kompaniyalar, manzillar, telefonlar va e-mail’lar **t
 - **Shahar xaritasi** (administrator va menejerlar): ofis, arizalar va ofisdan tashqaridagi xodimlar, shaharlar oʻrtasida almashtirish; demo uchun harakat imitatsiyasi.
 - **Hisobotlar**: davr boʻyicha davomat Excel fayli — «Umumiy» va «Kunlar boʻyicha» varaqlari.
 - **AI-agent uchun MCP server** (`mcp-server/`, `npm run mcp`, maxfiy kalit): hamma qayerda, xodimni topish, bugun kim kechikdi, davomat hisoboti, ofisdagi boʻsh xodimga ariza biriktirish.
-
-**Rejada** ([docs/SPEC.md](docs/SPEC.md) ga qarang)
-- Kun davomida sabab bilan chiqish / qaytish.
+- **Sabab bilan chiqish va qaytish**: tushlik, mijozga borish (ariza bilan), uchrashuv, shaxsiy, boshqa, kun oxiri; «Qaytdim» — bir bosishda.
+- **«Human Liquid Glass» interfeysi**: xiralashtirilgan ofis foni, shisha panellar, zumrad rang, yorugʻ/qorongʻi/tizim mavzusi, yumshoq prujinali harakat, Ctrl+K buyruqlar paneli, telefonda pastki menyu (batafsil — [docs/SPEC.md §9](docs/SPEC.md)).
 
 ### Texnologiyalar
 
@@ -267,9 +265,8 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 - **На карте города** (админ и менеджеры): офис, заявки и сотрудники вне офиса, переключатель городов; имитация движения для демо.
 - **Отчёты**: Excel-файл посещаемости за период — листы «Сводка» и «По дням».
 - **MCP-сервер для ИИ-агента** (`mcp-server/`, `npm run mcp`, секретный ключ): где все сотрудники, поиск сотрудника, кто опоздал сегодня, сводка прихода и ухода, назначение заявки свободному сотруднику в офисе.
-
-**В планах** (см. [docs/SPEC.md](docs/SPEC.md))
-- Выход с причиной / возврат в течение дня.
+- **Выход с причиной и возврат**: обед, выезд на заявку, встреча, личное, другое, конец дня; «Вернулся» — одним нажатием.
+- **Интерфейс «Human Liquid Glass»**: размытое фото офиса на фоне, стеклянные панели, изумрудный акцент, светлая/тёмная/системная тема, мягкие пружинные анимации, палитра Ctrl+K, на телефоне — нижнее меню (подробно — [docs/SPEC.md §9](docs/SPEC.md)).
 
 ### Технологии
 

@@ -2,10 +2,10 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
+import { Field, FormActions, FormError, FormSection, SubmitButton, textareaClass } from "@/components/form-field";
 import { LocationPicker } from "@/components/map";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Link } from "@/i18n/navigation";
 import { saveClient, type ClientField, type ClientFormState, type ClientFormValues } from "./actions";
 
@@ -24,71 +24,64 @@ export function ClientForm({ id, initial }: { id?: string; initial: ClientFormVa
   const [state, action, pending] = useActionState<ClientFormState, FormData>(saveClient, {});
   const v = state.values ?? initial;
 
-  const field = (name: ClientField, opts: { required?: boolean; type?: string } = {}) => {
+  const field = (name: ClientField, opts: { required?: boolean; type?: string; autoComplete?: string; autoFocus?: boolean } = {}) => {
     const error = state.fieldErrors?.[name];
     return (
-      <div className="grid gap-2">
-        <Label htmlFor={name}>{t(`clientForm.${LABEL[name]}`)}</Label>
+      <Field label={t(`clientForm.${LABEL[name]}`)} htmlFor={name} error={error && t(`clientForm.errors.${error}`)}>
         <Input
           id={name}
           name={name}
           type={opts.type}
+          autoComplete={opts.autoComplete}
+          autoFocus={opts.autoFocus}
           defaultValue={v[name]}
           required={opts.required}
           aria-invalid={error ? true : undefined}
         />
-        {error && <p className="text-xs text-destructive">{t(`clientForm.errors.${error}`)}</p>}
-      </div>
+      </Field>
     );
   };
 
   // `key` remounts the form after a failed attempt so the entered values come back.
   return (
-    <form key={state.attempt ?? 0} action={action} className="grid gap-4 lg:grid-cols-2">
+    <form key={state.attempt ?? 0} action={action} className="surface grid gap-7 rounded-2xl p-5 sm:p-7 lg:grid-cols-2">
       {id && <input type="hidden" name="id" value={id} />}
 
-      <div className="grid content-start gap-4">
-        {field("companyName", { required: true })}
-        {field("contactName", { required: true })}
-        <div className="grid gap-4 sm:grid-cols-2">
-          {field("phone", { type: "tel" })}
-          {field("email", { type: "email" })}
-        </div>
-        {field("city")}
-        {field("address")}
-        <div className="grid gap-2">
-          <Label htmlFor="notes">{t("clientForm.notes")}</Label>
-          <textarea
-            id="notes"
-            name="notes"
-            rows={3}
-            defaultValue={v.notes}
-            className="rounded-lg border border-input bg-transparent px-2.5 py-1.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-          />
-        </div>
+      <div className="grid content-start gap-7">
+        <FormSection title={t("clientForm.sectionCompany")}>
+          {field("companyName", { required: true, autoComplete: "organization", autoFocus: !id })}
+          {field("contactName", { required: true, autoComplete: "name" })}
+          <div className="grid gap-4 sm:grid-cols-2">
+            {field("phone", { type: "tel", autoComplete: "tel" })}
+            {field("email", { type: "email", autoComplete: "email" })}
+          </div>
+        </FormSection>
+        <FormSection title={t("clientForm.sectionAddress")}>
+          <div className="grid gap-4 sm:grid-cols-[2fr_3fr]">
+            {field("city", { autoComplete: "address-level2" })}
+            {field("address", { autoComplete: "street-address" })}
+          </div>
+          <Field label={t("clientForm.notes")} htmlFor="notes">
+            <textarea id="notes" name="notes" rows={3} defaultValue={v.notes} className={textareaClass} />
+          </Field>
+        </FormSection>
       </div>
 
-      <div className="grid content-start gap-2">
-        <Label>{t("clientForm.location")}</Label>
+      <FormSection title={t("clientForm.location")}>
         <LocationPicker
           initial={v.lat !== null && v.lng !== null ? { lat: v.lat, lng: v.lng } : null}
           query={[v.address, v.city].filter(Boolean).join(", ")}
         />
-      </div>
+      </FormSection>
 
-      {state.error && (
-        <p role="alert" className="text-sm text-destructive lg:col-span-2">
-          {t(`clientForm.errors.${state.error}`)}
-        </p>
-      )}
-
-      <div className="flex gap-2 lg:col-span-2">
-        <Button type="submit" disabled={pending}>
-          {pending ? t("common.saving") : t("common.save")}
-        </Button>
-        <Link href="/clients" className={buttonVariants({ variant: "outline" })}>
-          {t("common.cancel")}
-        </Link>
+      <div className="grid gap-5 lg:col-span-2">
+        <FormError>{state.error && t(`clientForm.errors.${state.error}`)}</FormError>
+        <FormActions>
+          <SubmitButton pending={pending}>{pending ? t("common.saving") : t("common.save")}</SubmitButton>
+          <Link href="/clients" className={buttonVariants({ variant: "ghost" })}>
+            {t("common.cancel")}
+          </Link>
+        </FormActions>
       </div>
     </form>
   );

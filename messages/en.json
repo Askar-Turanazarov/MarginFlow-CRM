@@ -33,7 +33,9 @@
     "submitting": "Signing in…",
     "invalid": "Wrong login or password",
     "devTitle": "Quick login (local testing)",
-    "devHint": "Only under npm run dev on localhost. No password needed."
+    "devHint": "Only under npm run dev on localhost. No password needed.",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -126,7 +128,9 @@
       "deskTaken": "This desk is already taken",
       "selfDeactivate": "You cannot disable your own account",
       "notFound": "Employee not found"
-    }
+    },
+    "sectionPerson": "Person",
+    "sectionAccess": "Sign-in and desk"
   },
   "common": {
     "save": "Save",
@@ -136,7 +140,8 @@
     "edit": "Edit",
     "all": "All",
     "none": "—",
-    "close": "Close"
+    "close": "Close",
+    "clear": "Clear"
   },
   "clients": {
     "title": "Clients",
@@ -176,7 +181,9 @@
       "required": "Required field",
       "email": "Invalid e-mail",
       "notFound": "Client not found"
-    }
+    },
+    "sectionCompany": "Company and contact",
+    "sectionAddress": "Address"
   },
   "requestStatus": {
     "NEW": "New",
@@ -195,7 +202,11 @@
     "overdue": "Overdue",
     "notAssigned": "Not assigned",
     "empty": "No requests",
-    "mine": "Only requests assigned to you are shown"
+    "mine": "Only requests assigned to you are shown",
+    "toast": {
+      "assigned": "Assignee updated",
+      "statusChanged": "Status updated"
+    }
   },
   "requestForm": {
     "createTitle": "New request",
@@ -214,7 +225,9 @@
       "assigneeRequired": "Choose an assignee for this status",
       "forbidden": "You cannot change this request",
       "notFound": "Request not found"
-    }
+    },
+    "sectionWhat": "What to do",
+    "sectionWho": "Who and when"
   },
   "zoneKind": {
     "KITCHEN": "Kitchen",
@@ -261,7 +274,14 @@
       "fileSize": "The file is larger than 5 MB",
       "notFound": "Not found"
     },
-    "personNow": "Employee now"
+    "personNow": "Employee now",
+    "tools": "Plan tools",
+    "saved": "Saved",
+    "deleted": "Deleted",
+    "uploaded": "Plan image updated",
+    "chooseFile": "Choose an image",
+    "deleteDesk": "Delete desk {code}?",
+    "deleteZone": "Delete zone “{name}”?"
   },
   "attendance": {
     "checkInHint": "The workday starts at {start}. Check-in until {lastOnTime} is on time, later counts as late.",
@@ -342,7 +362,14 @@
     "attendanceHint": "Choose the period: the Excel file has two sheets, Summary and By day.",
     "from": "From",
     "to": "To",
-    "download": "Download Excel report"
+    "download": "Download Excel report",
+    "period": "Period",
+    "presets": {
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "lastMonth": "Last month",
+      "custom": "Custom"
+    }
   },
   "report": {
     "sheetSummary": "Summary",

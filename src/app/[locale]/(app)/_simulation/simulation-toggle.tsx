@@ -14,12 +14,12 @@ export function SimulationToggle({ enabled }: { enabled: boolean }) {
   const [pending, startTransition] = useTransition();
 
   return (
-    <div className="flex items-center gap-2 rounded-lg border bg-background px-3 py-1.5 text-sm" data-testid="simulation-toggle">
-      <span className={cn("size-2 rounded-full", enabled ? "animate-pulse bg-emerald-500" : "bg-slate-300")} />
+    <div className="glass flex h-10 items-center gap-2 rounded-xl py-1 pr-1 pl-3 text-sm" data-testid="simulation-toggle">
+      <span className={cn("size-2 rounded-full", enabled ? "animate-breathe bg-sig-in text-sig-in" : "bg-sig-off/50")} />
       <span>{t(enabled ? "on" : "off")}</span>
       <Button
         size="sm"
-        variant={enabled ? "outline" : "default"}
+        variant={enabled ? "ghost" : "default"}
         disabled={pending}
         onClick={() =>
           startTransition(async () => {

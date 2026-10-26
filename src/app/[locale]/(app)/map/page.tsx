@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { PageHeader } from "@/components/page";
 import { getOfficeSettings } from "@/lib/attendance";
 import { groupCities } from "@/lib/cities";
 import { prisma } from "@/lib/prisma";
@@ -47,8 +48,8 @@ export default async function MapPage() {
   }));
 
   return (
-    <div className="grid gap-4">
-      <h1 className="text-2xl font-semibold">{t("title")}</h1>
+    <div className="grid gap-5">
+      <PageHeader title={t("title")} />
       <CityMapPanel
         isAdmin={user.role === "ADMIN"}
         office={office}

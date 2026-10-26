@@ -1,7 +1,10 @@
-import type { Prisma, RequestStatus } from "@prisma/client";
+import type { Prisma, Request, RequestStatus } from "@prisma/client";
+import { CalendarClock, ClipboardList, Pencil, Plus } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { LinkTabs, type LinkTab } from "@/components/link-tabs";
+import { EmptyState, ListCard, PageHeader, ResponsiveList } from "@/components/page";
+import { Avatar } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Link } from "@/i18n/navigation";
 import { isOverdue } from "@/lib/dates";
@@ -41,40 +44,62 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
   const countOf = (s?: RequestStatus) =>
     counts.filter((c) => !s || c.status === s).reduce((sum, c) => sum + c._count, 0);
   const options: AssigneeOption[] = employees.map((e) => ({ id: e.id, name: `${e.firstName} ${e.lastName}` }));
-  const tabs: { key?: RequestStatus; label: string }[] = [
-    { label: t("common.all") },
-    ...STATUSES.map((s) => ({ key: s, label: t(`requestStatus.${s}`) })),
+  const tabs: LinkTab[] = [
+    { key: "all", href: "/requests", label: t("common.all"), count: countOf() },
+    ...STATUSES.map((s) => ({
+      key: s,
+      href: { pathname: "/requests", query: { status: s } },
+      label: t(`requestStatus.${s}`),
+      count: countOf(s),
+    })),
   ];
 
+  const due = (r: Request, overdue: boolean) =>
+    r.dueDate && (
+      <span className={cn("nums inline-flex items-center gap-1.5 whitespace-nowrap", overdue ? "font-medium text-sig-late" : "text-muted-foreground")}>
+        <CalendarClock className="size-3.5" />
+        {format.dateTime(r.dueDate, { dateStyle: "medium", timeZone: "UTC" })}
+        {overdue && <span data-testid="overdue">· {t("requests.overdue")}</span>}
+      </span>
+    );
+  const assignee = (r: (typeof requests)[number]) =>
+    canManage ? (
+      <AssigneeSelect id={r.id} value={r.assigneeId} options={options} />
+    ) : (
+      r.assignee && (
+        <span className="inline-flex items-center gap-2">
+          <Avatar id={r.assignee.id} name={`${r.assignee.firstName} ${r.assignee.lastName}`} size="xs" />
+          {r.assignee.firstName} {r.assignee.lastName}
+        </span>
+      )
+    );
+  const editLink = (id: string, compact = false) => (
+    <Link href={`/requests/${id}/edit`} className={buttonVariants({ variant: "ghost", size: compact ? "icon" : "sm" })} aria-label={t("common.edit")}>
+      <Pencil />
+      {!compact && t("common.edit")}
+    </Link>
+  );
+
   return (
-    <div className="grid gap-4">
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold">{t("requests.title")}</h1>
-        {canManage && (
-          <Link href="/requests/new" className={`${buttonVariants()} ml-auto`}>
-            {t("requests.add")}
-          </Link>
-        )}
-      </div>
-      {!canManage && <p className="text-sm text-muted-foreground">{t("requests.mine")}</p>}
+    <div className="grid gap-5">
+      <PageHeader
+        title={t("requests.title")}
+        description={!canManage && t("requests.mine")}
+        actions={
+          canManage && (
+            <Link href="/requests/new" className={buttonVariants()}>
+              <Plus />
+              {t("requests.add")}
+            </Link>
+          )
+        }
+      />
 
-      <nav className="flex flex-wrap gap-1" aria-label={t("requests.status")}>
-        {tabs.map((tab) => (
-          <Link
-            key={tab.key ?? "all"}
-            href={tab.key ? { pathname: "/requests", query: { status: tab.key } } : "/requests"}
-            className={cn(
-              "rounded-lg border px-3 py-1.5 text-sm hover:bg-muted",
-              tab.key === status && "border-primary bg-primary text-primary-foreground hover:bg-primary/90",
-            )}
-          >
-            {tab.label} <span className="opacity-70">{countOf(tab.key)}</span>
-          </Link>
-        ))}
-      </nav>
+      <LinkTabs tabs={tabs} active={status ?? "all"} label={t("requests.status")} />
 
-      <Card>
-        <CardContent>
+      <ResponsiveList
+        empty={requests.length === 0 && <EmptyState icon={ClipboardList} text={t("requests.empty")} className="surface rounded-2xl" />}
+        table={
           <Table>
             <TableHeader>
               <TableRow>
@@ -90,54 +115,51 @@ export default async function RequestsPage({ searchParams }: { searchParams: Pro
               {requests.map((r) => {
                 const overdue = isOverdue(r.dueDate, r.status);
                 return (
-                  <TableRow key={r.id} className={cn(overdue && "bg-destructive/5")}>
-                    <TableCell className="max-w-72 whitespace-normal">
+                  <TableRow key={r.id} className={cn(overdue && "bg-sig-late/[.05] hover:bg-sig-late/[.08]")}>
+                    <TableCell className="max-w-80 whitespace-normal">
                       <div className="font-medium">{r.title}</div>
-                      {r.description && <div className="text-xs text-muted-foreground">{r.description}</div>}
+                      {r.description && <div className="line-clamp-2 text-xs text-muted-foreground">{r.description}</div>}
                     </TableCell>
                     <TableCell>
                       <div>{r.client.companyName}</div>
                       <div className="text-xs text-muted-foreground">{r.client.city}</div>
                     </TableCell>
-                    <TableCell>
-                      {canManage ? (
-                        <AssigneeSelect id={r.id} value={r.assigneeId} options={options} />
-                      ) : (
-                        r.assignee && `${r.assignee.firstName} ${r.assignee.lastName}`
-                      )}
-                    </TableCell>
+                    <TableCell>{assignee(r)}</TableCell>
                     <TableCell>
                       <StatusSelect id={r.id} value={r.status} assigned={!!r.assigneeId} />
                     </TableCell>
-                    <TableCell className="whitespace-nowrap">
-                      {r.dueDate && format.dateTime(r.dueDate, { dateStyle: "medium", timeZone: "UTC" })}
-                      {overdue && (
-                        <div className="text-xs font-medium text-destructive" data-testid="overdue">
-                          {t("requests.overdue")}
-                        </div>
-                      )}
-                    </TableCell>
-                    {canManage && (
-                      <TableCell className="text-right">
-                        <Link href={`/requests/${r.id}/edit`} className={buttonVariants({ variant: "outline", size: "sm" })}>
-                          {t("common.edit")}
-                        </Link>
-                      </TableCell>
-                    )}
+                    <TableCell>{due(r, overdue)}</TableCell>
+                    {canManage && <TableCell className="text-right">{editLink(r.id)}</TableCell>}
                   </TableRow>
                 );
               })}
-              {requests.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center text-muted-foreground">
-                    {t("requests.empty")}
-                  </TableCell>
-                </TableRow>
-              )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+        }
+        cards={requests.map((r) => {
+          const overdue = isOverdue(r.dueDate, r.status);
+          return (
+            <ListCard key={r.id} className={cn(overdue && "ring-1 ring-sig-late/30")}>
+              <div className="flex items-start gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="font-medium">{r.title}</div>
+                  <div className="truncate text-xs text-muted-foreground">
+                    {r.client.companyName}
+                    {r.client.city && ` · ${r.client.city}`}
+                  </div>
+                </div>
+                {canManage && editLink(r.id, true)}
+              </div>
+              {r.description && <p className="line-clamp-2 text-sm text-muted-foreground">{r.description}</p>}
+              <div className="grid gap-2 min-[400px]:grid-cols-2">
+                <StatusSelect id={r.id} value={r.status} assigned={!!r.assigneeId} />
+                <div className="min-w-0 self-center text-sm">{assignee(r)}</div>
+              </div>
+              {due(r, overdue)}
+            </ListCard>
+          );
+        })}
+      />
     </div>
   );
 }
