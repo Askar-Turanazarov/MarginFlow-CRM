@@ -2,14 +2,19 @@ import type { EmployeeStatus } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
 import { StatusBadge } from "@/components/status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getOfficeSettings, getTodayWorkDay } from "@/lib/attendance";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
+import { MyDayCard } from "../_attendance/my-day-card";
+import { TodayOverview } from "../_attendance/today-overview";
 
 const STATUSES: EmployeeStatus[] = ["IN_OFFICE", "OUT_OF_OFFICE", "OFF_DUTY"];
 
 export default async function DashboardPage() {
   const user = await requireUser();
   const t = await getTranslations();
+  const settings = await getOfficeSettings();
+  const workDay = await getTodayWorkDay(user.employeeId, settings);
 
   const groups = await prisma.employee.groupBy({
     by: ["status"],
@@ -41,6 +46,15 @@ export default async function DashboardPage() {
           </div>
         </CardContent>
       </Card>
+
+      <MyDayCard workDay={workDay} settings={settings} />
+
+      {user.role === "ADMIN" && (
+        <section className="grid gap-3">
+          <h2 className="text-lg font-medium">{t("attendance.today")}</h2>
+          <TodayOverview settings={settings} />
+        </section>
+      )}
 
       <section className="grid gap-3">
         <h2 className="text-lg font-medium">{t("dashboard.now")}</h2>

@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { getPlanImage } from "@/lib/office-plan";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
 import { OfficePlanEditor, type DeskView, type EmployeeOption, type ZoneView } from "./office-plan-editor";
@@ -9,7 +10,7 @@ export default async function OfficePlanPage() {
   const t = await getTranslations("officePlan");
 
   const [plan, desks, zones, employees] = await Promise.all([
-    prisma.officePlan.findUnique({ where: { id: 1 }, select: { mimeType: true, updatedAt: true } }),
+    getPlanImage(),
     prisma.desk.findMany({ include: { employee: true }, orderBy: { code: "asc" } }),
     prisma.zone.findMany({ orderBy: { createdAt: "asc" } }),
     canEdit
@@ -20,10 +21,6 @@ export default async function OfficePlanPage() {
         })
       : [],
   ]);
-
-  // Without an uploaded image the built-in test plan is shown.
-  const hasImage = !!plan?.mimeType;
-  const imageUrl = plan?.mimeType ? `/api/office-plan/image?v=${plan.updatedAt.getTime()}` : "/office-plan-demo.svg";
 
   const deskViews: DeskView[] = desks.map((d) => ({
     id: d.id,
@@ -58,8 +55,8 @@ export default async function OfficePlanPage() {
         desks={deskViews}
         zones={zoneViews}
         employees={employeeOptions}
-        imageUrl={imageUrl}
-        isTestPlan={!hasImage}
+        imageUrl={plan.url}
+        isTestPlan={plan.isTestPlan}
         canEdit={canEdit}
       />
     </div>
