@@ -107,6 +107,7 @@ The demo data also has 20 desks (13 occupied), 3 zones, 7 clients (California an
 | `npm run db:start` / `db:stop` | Start / stop local PostgreSQL |
 | `npm run db:migrate` | Apply Prisma migrations |
 | `npm run db:seed` | Load mock data |
+| `npm run db:cleanup` | Remove location points older than the retention period |
 | `npm run sim:on` / `sim:off` | Turn the movement simulation on / off (while `npm run dev` is running) |
 | `npm run tunnel` | Temporary public https address for testing from a phone (needs `tools/cloudflared.exe`, not in Git) |
 | `npm run mcp` | MCP server for an AI agent: http://127.0.0.1:3333/mcp (needs `MCP_API_KEY` in `.env`) |
@@ -118,6 +119,19 @@ The demo data also has 20 desks (13 occupied), 3 zones, 7 clients (California an
 3. On the phone: open the address, sign in as `field.tracker` (password: `SEED_TRACKER_PASSWORD` in `.env`), tap the check-in button, then "Turn on tracking", and allow geolocation. Keep the page open.
 4. On the computer: sign in as an admin or manager, open the city map and follow the tracking link.
 5. Stop the tunnel when you finish: while it runs, the development server is reachable from the internet, and the phone sends real coordinates.
+
+### Security and quick login
+
+- Quick login without a password works only with `npm run dev`, only on `localhost`, and only with `DEV_LOGIN=1` in `.env`. The development server listens on `127.0.0.1`, so it cannot be reached from the local network.
+- Login attempts are limited: 5 in 15 minutes for a login + address, 30 for an address. Limits also cover phone points, search and the Excel report.
+- A password change signs out the old sessions. Real coordinates are kept for 30 days (`locationRetentionDays`); an admin sees who viewed the tracking page.
+
+### Deploying to Vercel + Neon
+
+1. Create a Neon project in US West and a Vercel project from this repository. `vercel.json` sets the build command and the daily cleanup.
+2. In Vercel → Environment Variables set: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, pooled), `DIRECT_URL` (Neon, direct), `CRON_SECRET`. Add `POSITIONS_API_TOKEN` only if you use sensors. Never set `DEV_LOGIN` there. Use a separate Neon branch with its own URLs for Preview.
+3. Load the demo data once from your computer with new `SEED_*` passwords, different from the local ones, and with `DATABASE_URL` and `DIRECT_URL` pointing at Neon: `npm run db:seed`.
+4. The MCP server stays a local process and is not deployed. On Vercel the movement simulation has no always-on process: it moves only while someone has the plan or map open.
 
 ### Notes
 
@@ -231,6 +245,7 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 | `npm run db:start` / `db:stop` | Lokal PostgreSQL ni ishga tushirish / toʻxtatish |
 | `npm run db:migrate` | Prisma migratsiyalarini qoʻllash |
 | `npm run db:seed` | Mock maʼlumotlarni yuklash |
+| `npm run db:cleanup` | Saqlash muddatidan eski joylashuv nuqtalarini oʻchirish |
 | `npm run sim:on` / `sim:off` | Harakat imitatsiyasini yoqish / oʻchirish (`npm run dev` ishlab turganda) |
 | `npm run tunnel` | Telefondan tekshirish uchun vaqtinchalik ochiq https manzil (`tools/cloudflared.exe` kerak, Gitda yoʻq) |
 | `npm run mcp` | AI-agent uchun MCP server: http://127.0.0.1:3333/mcp (`.env` da `MCP_API_KEY` kerak) |
@@ -242,6 +257,19 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 3. Telefonda: manzilni oching, `field.tracker` sifatida kiring (parol: `.env` dagi `SEED_TRACKER_PASSWORD`), kelganingizni belgilang, kuzatishni yoqing va geolokatsiyaga ruxsat bering. Sahifani ochiq qoldiring.
 4. Kompyuterda: admin yoki menejer sifatida kiring, shahar xaritasini oching va kuzatish havolasini bosing.
 5. Tugatgach, tunnelni toʻxtating: u ishlab turganda ishlab chiqish serveri internetdan ochiq boʻladi, telefon esa haqiqiy koordinatalarni yuboradi.
+
+### Xavfsizlik va tezkor kirish
+
+- Parolsiz tezkor kirish faqat `npm run dev` da, faqat `localhost` da va `.env` da `DEV_LOGIN=1` boʻlganda ishlaydi. Ishlab chiqish serveri `127.0.0.1` da tinglaydi, shuning uchun unga lokal tarmoqdan kirib boʻlmaydi.
+- Kirish urinishlari cheklangan: login + manzil uchun 15 daqiqada 5 ta, manzil uchun 30 ta. Cheklovlar telefon nuqtalari, qidiruv va Excel hisobotiga ham tegishli.
+- Parol oʻzgarganda eski sessiyalar yopiladi. Haqiqiy koordinatalar 30 kun saqlanadi (`locationRetentionDays`); admin kuzatish sahifasini kim koʻrganini koʻradi.
+
+### Vercel + Neon ga joylash
+
+1. Neon loyihasini US West hududida va shu repozitoriydan Vercel loyihasini yarating. `vercel.json` build buyrugʻi va kunlik tozalashni belgilaydi.
+2. Vercel → Environment Variables ga kiriting: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, pooled), `DIRECT_URL` (Neon, direct), `CRON_SECRET`. `POSITIONS_API_TOKEN` faqat sensorlar ishlatilsa kerak. `DEV_LOGIN` ni u yerda hech qachon koʻrsatmang. Preview uchun oʻz URL manzillari bilan alohida Neon tarmogʻidan foydalaning.
+3. Demo maʼlumotlarni kompyuteringizdan bir marta yuklang: lokaldan farqli yangi `SEED_*` parollar bilan, `DATABASE_URL` va `DIRECT_URL` Neon ga qaragan holda: `npm run db:seed`.
+4. MCP server lokal jarayon boʻlib qoladi va joylanmaydi. Vercel da harakat imitatsiyasi uchun doimiy jarayon yoʻq: u faqat kimdir plan yoki xaritani ochib turganda harakatlanadi.
 
 ### Eslatmalar
 
@@ -355,6 +383,7 @@ npm run db:stop
 | `npm run db:start` / `db:stop` | Запустить / остановить локальный PostgreSQL |
 | `npm run db:migrate` | Применить миграции Prisma |
 | `npm run db:seed` | Залить мок-данные |
+| `npm run db:cleanup` | Удалить точки геолокации старше срока хранения |
 | `npm run sim:on` / `sim:off` | Включить / выключить имитацию движения (пока работает `npm run dev`) |
 | `npm run tunnel` | Временный публичный https-адрес для проверки с телефона (нужен `tools/cloudflared.exe`, его нет в Git) |
 | `npm run mcp` | MCP-сервер для ИИ-агента: http://127.0.0.1:3333/mcp (нужен `MCP_API_KEY` в `.env`) |
@@ -366,6 +395,19 @@ npm run db:stop
 3. На телефоне: откройте адрес, войдите как `field.tracker` (пароль — `SEED_TRACKER_PASSWORD` в `.env`), нажмите «Я пришёл», затем «Включить слежение» и разрешите геолокацию. Страницу не закрывайте.
 4. На компьютере: войдите как админ или менеджер, откройте карту города и перейдите по ссылке «Следить».
 5. Закончив, остановите туннель: пока он работает, сервер разработки доступен из интернета, а телефон шлёт настоящие координаты.
+
+### Безопасность и быстрый вход
+
+- Быстрый вход без пароля работает только при `npm run dev`, только на `localhost` и только с `DEV_LOGIN=1` в `.env`. Сервер разработки слушает `127.0.0.1`, поэтому из локальной сети он недоступен.
+- Попытки входа ограничены: 5 за 15 минут на пару логин + адрес, 30 на адрес. Лимиты есть также у точек с телефона, поиска и Excel-отчёта.
+- Смена пароля завершает старые сессии. Настоящие координаты хранятся 30 дней (`locationRetentionDays`); админ видит, кто смотрел страницу слежения.
+
+### Деплой на Vercel + Neon
+
+1. Создайте проект Neon в регионе US West и проект Vercel из этого репозитория. Команду сборки и ежедневную очистку задаёт `vercel.json`.
+2. В Vercel → Environment Variables укажите: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, с пулом), `DIRECT_URL` (Neon, без пула), `CRON_SECRET`. `POSITIONS_API_TOKEN` нужен только для сенсоров. `DEV_LOGIN` там не задавайте никогда. Для Preview используйте отдельную ветку Neon со своими адресами.
+3. Один раз залейте демо-данные со своего компьютера: с новыми паролями `SEED_*`, отличными от локальных, и с `DATABASE_URL` и `DIRECT_URL`, указывающими на Neon: `npm run db:seed`.
+4. MCP-сервер остаётся локальным процессом и не деплоится. На Vercel у имитации движения нет постоянного процесса: люди двигаются, только пока кто-то держит открытым план или карту.
 
 ### Примечания
 

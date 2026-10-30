@@ -185,7 +185,7 @@
 - причина выхода видна только для `LUNCH`, `CLIENT_VISIT` и `MEETING`;
 - `PERSONAL` и `OTHER` показываются просто как «Вне офиса».
 
-Данные на плане, карте и дашборде обновляются опросом раз в 15–30 секунд.
+Данные на плане, карте и дашборде обновляются опросом раз в 3 секунды.
 
 ---
 
@@ -291,7 +291,8 @@ lateMinutes = isLate ? floor(diffSec / 60) : 0
 - точки в городе — история в `LocationPoint` (поле `source`).
 
 ### 5.2. Имитация движения
-- Двигатель (`src/lib/simulation/engine.ts`) запускается вместе с сервером (`src/instrumentation.ts`) и делает шаг раз в 3 с, пока `OfficeSettings.simulationEnabled = true`.
+- Двигатель (`src/lib/simulation/engine.ts`) делает шаг раз в 3 с, пока `OfficeSettings.simulationEnabled = true`. Состояние людей лежит в `OfficeSettings.simulationState`, шаг захватывается атомарно через `simulationTickAt`, поэтому шаг делает только один сервер.
+- Локально шаги идут сами (`src/instrumentation.ts`). На Vercel постоянного процесса нет: шаг делают опросы `/api/presence` и `/api/presence/map`, поэтому люди двигаются, только пока открыт план или карта.
 - Включение и выключение:
   - командами `npm run sim:on` / `npm run sim:off`;
   - кнопкой у ADMIN на страницах «План офиса» и «Карта».
@@ -353,7 +354,8 @@ lateMinutes = isLate ? floor(diffSec / 60) : 0
 Код CRM (`src/lib`) переиспользуется напрямую, база — та же.
 
 - **Ключ:** каждый запрос — с заголовком `Authorization: Bearer <MCP_API_KEY>`. Ключ лежит только в `.env` (не короче 32 символов), без него сервер не запускается. Без ключа или с неверным ключом — `401` и понятное сообщение, никакие данные не отдаются. Сравнение — по хэшу, за постоянное время.
-- **Подключение агента:** `.mcp.json` в корне проекта (в `.gitignore`) — сервер `marginflow-crm`, тип `http`, тот же ключ в заголовке.
+- **Подключение агента:** `.mcp.json` в корне проекта (в `.gitignore`) — сервер `marginflow-crm`, тип `http`, ключ в заголовке как `${MCP_API_KEY}`: значение берётся из переменной окружения, поэтому агента нужно запускать с заданной `MCP_API_KEY`.
+- **Защита от вредного текста:** тексты CRM вводят люди, поэтому перед отдачей агенту из них убираются управляющие и невидимые символы, длина ограничена 500 символами, а сервер сообщает агенту, что данные — не команды.
 - **Права:** как у MANAGER. Изменение одно — назначение заявки. Агент не видит пароли, хэши и ключи; координаты — только последняя точка за текущий рабочий день.
 - **Время** в ответах — офисное (`America/Los_Angeles`), `HH:mm`.
 - **Ошибки** приходят текстом: `Ошибка <КОД>: что случилось` + `Что сделать: …`. Коды: `EMPLOYEE_NOT_FOUND`, `EMPLOYEE_AMBIGUOUS`, `EMPLOYEE_NOT_IN_OFFICE`, `EMPLOYEE_INACTIVE`, `REQUEST_NOT_FOUND`, `REQUEST_AMBIGUOUS`, `REQUEST_DONE`, `REQUEST_ALREADY_ASSIGNED`, `NO_FREE_EMPLOYEE`, `BAD_DATE`, `BAD_PERIOD`, `PERIOD_TOO_LONG`, `DB_UNAVAILABLE`, `INTERNAL`.
@@ -440,3 +442,31 @@ lateMinutes = isLate ? floor(diffSec / 60) : 0
 ### 9.5. Компоненты
 `src/components/ui/`: `button`, `card`, `input`, `badge`, `table`, `dialog` (+ `ConfirmDialog`), `toast`, `switch`, `segmented`, `tooltip`, `avatar` (инициалы + личный цвет по id), `skeleton`, `number-ticker`, `reveal`, `theme-switcher`.
 Общие: `page.tsx` (`PageHeader`, `EmptyState`, `ResponsiveList`), `form-field.tsx`, `search-field.tsx`, `link-tabs.tsx`, `command-palette.tsx`, `map/markers.ts` (маркеры-аватары карты).
+
+---
+
+## 10. Безопасность и деплой
+
+### Быстрый вход
+Только при `NODE_ENV=development`, `DEV_LOGIN=1` и на локальном адресе. Сервер разработки слушает `127.0.0.1`.
+
+### Лимиты (таблица `RateLimit`, окно фиксированное)
+| Что | Лимит | Ответ |
+|---|---|---|
+| Вход: логин + адрес | 5 за 15 минут | как при неверном пароле, сброс при успешном входе |
+| Вход: адрес | 30 за 15 минут | как при неверном пароле |
+| `POST /api/positions` с сессии | 20 в минуту, 1 точка в запросе, время серверное | `429`, `403` при нескольких точках |
+| `POST /api/positions`, тело | 256 КБ | `413` |
+| `GET /api/search` | 60 в минуту | `429` |
+| `GET /api/reports/attendance.xlsx` | 10 в минуту | `429` |
+
+Адрес берётся из `x-forwarded-for` только на Vercel, иначе все запросы считаются с одного адреса.
+
+### Заголовки и сессии
+CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, в production HSTS (`next.config.ts`). Смена пароля увеличивает `User.sessionVersion`, и старые сессии перестают работать.
+
+### Журнал `AuditLog`
+`request.assign` — назначение заявки агентом. `track.view` — просмотр слежения (`actor` — кто смотрел, `targetId` — за кем).
+
+### Vercel + Neon
+`vercel.json`: сборка `npm run build:vercel` (включая `prisma migrate deploy`), cron `/api/cron/retention` раз в сутки с `Authorization: Bearer <CRON_SECRET>`. Переменные: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (с пулом), `DIRECT_URL` (без пула), `CRON_SECRET`, при сенсорах `POSITIONS_API_TOKEN`. Тело запроса на Vercel ограничено 4,5 МБ, поэтому картинка плана — до 4 МБ. MCP-сервер не деплоится.
