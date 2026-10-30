@@ -469,4 +469,4 @@ CSP, `X-Frame-Options`, `nosniff`, `Referrer-Policy`, `Permissions-Policy`, в p
 `request.assign` — назначение заявки агентом. `track.view` — просмотр слежения (`actor` — кто смотрел, `targetId` — за кем).
 
 ### Vercel + Neon
-`vercel.json`: сборка `npm run build:vercel` (включая `prisma migrate deploy`), cron `/api/cron/retention` раз в сутки с `Authorization: Bearer <CRON_SECRET>`. Переменные: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (с пулом), `DIRECT_URL` (без пула), `CRON_SECRET`, при сенсорах `POSITIONS_API_TOKEN`. Тело запроса на Vercel ограничено 4,5 МБ, поэтому картинка плана — до 4 МБ. MCP-сервер не деплоится.
+`vercel.json`: сборка `npm run build:vercel` (включая `prisma migrate deploy`), cron `/api/cron/retention` раз в сутки с `Authorization: Bearer <CRON_SECRET>`. Переменные: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (с пулом), `DATABASE_URL_UNPOOLED` (без пула), `CRON_SECRET`, при сенсорах `POSITIONS_API_TOKEN`. Тело запроса на Vercel ограничено 4,5 МБ, поэтому картинка плана — до 4 МБ. MCP-сервер не деплоится.

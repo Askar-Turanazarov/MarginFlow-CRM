@@ -129,8 +129,8 @@ The demo data also has 20 desks (13 occupied), 3 zones, 7 clients (California an
 ### Deploying to Vercel + Neon
 
 1. Create a Neon project in US West and a Vercel project from this repository. `vercel.json` sets the build command and the daily cleanup.
-2. In Vercel → Environment Variables set: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, pooled), `DIRECT_URL` (Neon, direct), `CRON_SECRET`. Add `POSITIONS_API_TOKEN` only if you use sensors. Never set `DEV_LOGIN` there. Use a separate Neon branch with its own URLs for Preview.
-3. Load the demo data once from your computer with new `SEED_*` passwords, different from the local ones, and with `DATABASE_URL` and `DIRECT_URL` pointing at Neon: `npm run db:seed`.
+2. In Vercel → Environment Variables set: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, pooled), `DATABASE_URL_UNPOOLED` (Neon, direct), `CRON_SECRET`. Add `POSITIONS_API_TOKEN` only if you use sensors. Never set `DEV_LOGIN` there. Use a separate Neon branch with its own URLs for Preview.
+3. Load the demo data once from your computer with new `SEED_*` passwords, different from the local ones, and with `DATABASE_URL` and `DATABASE_URL_UNPOOLED` pointing at Neon: `npm run db:seed`.
 4. The MCP server stays a local process and is not deployed. On Vercel the movement simulation has no always-on process: it moves only while someone has the plan or map open.
 
 ### Notes
@@ -267,8 +267,8 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 ### Vercel + Neon ga joylash
 
 1. Neon loyihasini US West hududida va shu repozitoriydan Vercel loyihasini yarating. `vercel.json` build buyrugʻi va kunlik tozalashni belgilaydi.
-2. Vercel → Environment Variables ga kiriting: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, pooled), `DIRECT_URL` (Neon, direct), `CRON_SECRET`. `POSITIONS_API_TOKEN` faqat sensorlar ishlatilsa kerak. `DEV_LOGIN` ni u yerda hech qachon koʻrsatmang. Preview uchun oʻz URL manzillari bilan alohida Neon tarmogʻidan foydalaning.
-3. Demo maʼlumotlarni kompyuteringizdan bir marta yuklang: lokaldan farqli yangi `SEED_*` parollar bilan, `DATABASE_URL` va `DIRECT_URL` Neon ga qaragan holda: `npm run db:seed`.
+2. Vercel → Environment Variables ga kiriting: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, pooled), `DATABASE_URL_UNPOOLED` (Neon, direct), `CRON_SECRET`. `POSITIONS_API_TOKEN` faqat sensorlar ishlatilsa kerak. `DEV_LOGIN` ni u yerda hech qachon koʻrsatmang. Preview uchun oʻz URL manzillari bilan alohida Neon tarmogʻidan foydalaning.
+3. Demo maʼlumotlarni kompyuteringizdan bir marta yuklang: lokaldan farqli yangi `SEED_*` parollar bilan, `DATABASE_URL` va `DATABASE_URL_UNPOOLED` Neon ga qaragan holda: `npm run db:seed`.
 4. MCP server lokal jarayon boʻlib qoladi va joylanmaydi. Vercel da harakat imitatsiyasi uchun doimiy jarayon yoʻq: u faqat kimdir plan yoki xaritani ochib turganda harakatlanadi.
 
 ### Eslatmalar
@@ -405,8 +405,8 @@ npm run db:stop
 ### Деплой на Vercel + Neon
 
 1. Создайте проект Neon в регионе US West и проект Vercel из этого репозитория. Команду сборки и ежедневную очистку задаёт `vercel.json`.
-2. В Vercel → Environment Variables укажите: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, с пулом), `DIRECT_URL` (Neon, без пула), `CRON_SECRET`. `POSITIONS_API_TOKEN` нужен только для сенсоров. `DEV_LOGIN` там не задавайте никогда. Для Preview используйте отдельную ветку Neon со своими адресами.
-3. Один раз залейте демо-данные со своего компьютера: с новыми паролями `SEED_*`, отличными от локальных, и с `DATABASE_URL` и `DIRECT_URL`, указывающими на Neon: `npm run db:seed`.
+2. В Vercel → Environment Variables укажите: `AUTH_SECRET`, `AUTH_TRUST_HOST=true`, `DATABASE_URL` (Neon, с пулом), `DATABASE_URL_UNPOOLED` (Neon, без пула), `CRON_SECRET`. `POSITIONS_API_TOKEN` нужен только для сенсоров. `DEV_LOGIN` там не задавайте никогда. Для Preview используйте отдельную ветку Neon со своими адресами.
+3. Один раз залейте демо-данные со своего компьютера: с новыми паролями `SEED_*`, отличными от локальных, и с `DATABASE_URL` и `DATABASE_URL_UNPOOLED`, указывающими на Neon: `npm run db:seed`.
 4. MCP-сервер остаётся локальным процессом и не деплоится. На Vercel у имитации движения нет постоянного процесса: люди двигаются, только пока кто-то держит открытым план или карту.
 
 ### Примечания
