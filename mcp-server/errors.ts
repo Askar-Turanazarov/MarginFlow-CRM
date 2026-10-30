@@ -13,13 +13,32 @@ export class ToolError extends Error {
   }
 }
 
+const MAX_TEXT = 500;
+// Control and invisible characters (line breaks, zero-width, text direction): they can disguise text as instructions.
+const HIDDEN_CHARS = /[\p{Cc}\p{Cf}\p{Zl}\p{Zp}]+/gu;
+
+/** CRM text is typed by people, so it is cleaned and shortened before an agent reads it. */
+export function cleanText(text: string) {
+  const clean = text.replace(HIDDEN_CHARS, " ").replace(/ {2,}/g, " ").trim();
+  return clean.length > MAX_TEXT ? `${clean.slice(0, MAX_TEXT)}…` : clean;
+}
+
+function cleanDeep(value: unknown): unknown {
+  if (typeof value === "string") return cleanText(value);
+  if (Array.isArray(value)) return value.map(cleanDeep);
+  if (value && typeof value === "object" && !(value instanceof Date)) {
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, cleanDeep(v)]));
+  }
+  return value;
+}
+
 export const ok = (data: unknown): CallToolResult => ({
-  content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+  content: [{ type: "text", text: JSON.stringify(cleanDeep(data), null, 2) }],
 });
 
 const fail = (code: string, message: string, hint: string): CallToolResult => ({
   isError: true,
-  content: [{ type: "text", text: `Ошибка ${code}: ${message}\nЧто сделать: ${hint}` }],
+  content: [{ type: "text", text: `Ошибка ${code}: ${cleanText(message)}\nЧто сделать: ${hint}` }],
 });
 
 /** Runs a tool and turns any exception into a readable error result. */

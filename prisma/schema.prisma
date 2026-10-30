@@ -241,6 +241,17 @@ model OfficeSettings {
   updatedAt               DateTime @updatedAt
 }
 
+model AuditLog {
+  id       String   @id @default(cuid())
+  actor    String
+  action   String
+  targetId String?
+  meta     Json?
+  at       DateTime @default(now())
+
+  @@index([action, targetId, at])
+}
+
 model RateLimit {
   key         String   @id
   count       Int      @default(0)

@@ -1,6 +1,5 @@
 // Demo data. All people, companies, phones, e-mails and street addresses are fictional.
 import "dotenv/config";
-import { createHash } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { PrismaClient, type RequestStatus, Role, type ZoneKind } from "@prisma/client";
 
@@ -226,12 +225,6 @@ async function main() {
         },
       });
     }
-  }
-
-  const agentToken = process.env.AGENT_API_TOKEN;
-  if (agentToken && agentToken !== "change-me") {
-    const tokenHash = createHash("sha256").update(agentToken).digest("hex");
-    await prisma.agentToken.upsert({ where: { tokenHash }, update: {}, create: { name: "Demo agent", tokenHash } });
   }
 
   console.log(

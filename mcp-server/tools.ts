@@ -278,7 +278,7 @@ export function registerTools(server: McpServer) {
       inputSchema: {
         request: z.string().describe("ID заявки или часть её названия / названия компании клиента"),
         employee: z.string().optional().describe("Кому назначить (имя или логин); если не указано — самому свободному в офисе"),
-        reassign: z.boolean().optional().describe("true — переназначить, даже если у заявки уже есть исполнитель"),
+        reassign: z.boolean().optional().describe("true — переназначить, даже если у заявки уже есть исполнитель. Работает, только если на сервере включено MCP_ALLOW_REASSIGN=1"),
       },
       annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: false },
     },
@@ -309,11 +309,14 @@ export function registerTools(server: McpServer) {
         if (target.status === "DONE") {
           throw new ToolError("REQUEST_DONE", `Заявка «${target.title}» уже выполнена (DONE).`, "Выполненные заявки не назначаются; создайте новую заявку в CRM.");
         }
-        if (target.assignee && !reassign) {
+        const reassignAllowed = process.env.MCP_ALLOW_REASSIGN === "1";
+        if (target.assignee && !(reassign && reassignAllowed)) {
           throw new ToolError(
             "REQUEST_ALREADY_ASSIGNED",
             `Заявка «${target.title}» уже назначена: ${fullName(target.assignee)}.`,
-            "Чтобы переназначить, повторите вызов с reassign: true.",
+            reassignAllowed
+              ? "Чтобы переназначить, повторите вызов с reassign: true."
+              : "Агенту нельзя переназначать чужие заявки (выключено на сервере). Менеджер может сделать это в CRM.",
           );
         }
 
@@ -346,11 +349,21 @@ export function registerTools(server: McpServer) {
           assignee = free[0];
         }
 
-        const updated = await prisma.request.update({
-          where: { id: target.id },
-          data: { assigneeId: assignee.id, assignedAt: new Date(), ...(target.status === "NEW" && { status: "ASSIGNED" }) },
-          include: { client: true },
-        });
+        const [updated] = await prisma.$transaction([
+          prisma.request.update({
+            where: { id: target.id },
+            data: { assigneeId: assignee.id, assignedAt: new Date(), ...(target.status === "NEW" && { status: "ASSIGNED" }) },
+            include: { client: true },
+          }),
+          prisma.auditLog.create({
+            data: {
+              actor: "mcp-agent",
+              action: "request.assign",
+              targetId: target.id,
+              meta: { assigneeId: assignee.id, previousAssigneeId: target.assigneeId },
+            },
+          }),
+        ]);
         const openNow = await prisma.request.count({ where: { assigneeId: assignee.id, status: { in: [...OPEN_REQUEST] } } });
         return ok({
           done: true,
