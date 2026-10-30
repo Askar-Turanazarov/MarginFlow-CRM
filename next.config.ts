@@ -3,7 +3,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   // Office plan images (up to 5 MB) are uploaded through a Server Action.
-  experimental: { serverActions: { bodySizeLimit: "6mb" } },
+  // The phone reaches the dev server through a Cloudflare tunnel (npm run tunnel).
+  allowedDevOrigins: ["*.trycloudflare.com"],
+  experimental: { serverActions: { bodySizeLimit: "6mb", allowedOrigins: ["*.trycloudflare.com"] } },
 };
 
 export default createNextIntlPlugin()(nextConfig);
