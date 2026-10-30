@@ -240,6 +240,12 @@ model OfficeSettings {
   updatedAt               DateTime @updatedAt
 }
 
+model RateLimit {
+  key         String   @id
+  count       Int      @default(0)
+  windowStart DateTime @default(now())
+}
+
 model AgentToken {
   id         String    @id @default(cuid())
   name       String

@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { parseDay } from "@/lib/dates";
 import { buildAttendanceWorkbook } from "@/lib/excel";
+import { rejectOverLimit } from "@/lib/rate-limit";
 import { getAttendanceReport, MAX_REPORT_DAYS } from "@/lib/report";
 import { getCurrentUser } from "@/lib/session";
 
@@ -13,6 +14,8 @@ export async function GET(request: NextRequest) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   if (user.role === "EMPLOYEE") return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  const limited = await rejectOverLimit(`report:${user.id}`, 10);
+  if (limited) return limited;
 
   const params = request.nextUrl.searchParams;
   const fromStr = params.get("from") ?? "";

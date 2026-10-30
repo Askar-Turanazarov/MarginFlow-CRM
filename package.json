@@ -11,6 +11,7 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "check:track": "tsx scripts/check-track.ts",
+    "check:security": "tsx scripts/check-security.ts",
     "tunnel": "tools\\cloudflared.exe tunnel --url http://127.0.0.1:3000",
     "db:start": "node prisma/local-db.mjs",
     "db:migrate": "prisma migrate dev",

@@ -1,7 +1,19 @@
 import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { ingestPositions, positionsBodySchema, type PositionInput } from "@/lib/positions";
+import { rejectOverLimit } from "@/lib/rate-limit";
 import { getCurrentUser } from "@/lib/session";
+
+const MAX_BODY_BYTES = 256 * 1024;
+const PHONE_REQUESTS_PER_MINUTE = 20;
+
+function parseJson(text: string): unknown {
+  try {
+    return JSON.parse(text);
+  } catch {
+    return null;
+  }
+}
 
 // Entry point for real devices (see src/lib/positions.ts):
 //   office sensors / trackers: Authorization: Bearer <POSITIONS_API_TOKEN from .env>, any employee;
@@ -24,7 +36,17 @@ export async function POST(request: Request) {
   const user = sensor ? null : await getCurrentUser();
   if (!sensor && !user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 
-  const body = positionsBodySchema.safeParse(await request.json().catch(() => null));
+  if (user) {
+    const limited = await rejectOverLimit(`positions:${user.id}`, PHONE_REQUESTS_PER_MINUTE);
+    if (limited) return limited;
+  }
+
+  if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: "tooLarge" }, { status: 413 });
+  }
+  const text = await request.text();
+  if (text.length > MAX_BODY_BYTES) return NextResponse.json({ error: "tooLarge" }, { status: 413 });
+  const body = positionsBodySchema.safeParse(parseJson(text));
   if (!body.success) return NextResponse.json({ error: "invalidBody", issues: body.error.issues }, { status: 400 });
 
   let positions: PositionInput[];
@@ -34,11 +56,12 @@ export async function POST(request: Request) {
     }
     positions = body.data.positions as PositionInput[];
   } else {
-    // A phone reports only its owner's location, and only in the city (office plan points come from sensors).
-    if (body.data.positions.some((p) => (p.employeeId && p.employeeId !== user!.employeeId) || p.office)) {
+    // A phone reports only its owner's location, one point at a time, and only in the city (office plan points come from sensors).
+    if (body.data.positions.length > 1 || body.data.positions.some((p) => (p.employeeId && p.employeeId !== user!.employeeId) || p.office)) {
       return NextResponse.json({ error: "forbidden" }, { status: 403 });
     }
-    positions = body.data.positions.map((p) => ({ ...p, employeeId: user!.employeeId }));
+    // The time is the server's: a client-sent "at" could slip past the too_often check and rewrite the route.
+    positions = body.data.positions.map((p) => ({ geo: p.geo, employeeId: user!.employeeId }));
   }
 
   return NextResponse.json(await ingestPositions(sensor ? "SENSOR" : "PHONE", positions));

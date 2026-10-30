@@ -1,6 +1,7 @@
 import type { Prisma } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rejectOverLimit } from "@/lib/rate-limit";
 import { getCurrentUser } from "@/lib/session";
 
 const LIMIT = 6;
@@ -9,6 +10,8 @@ const LIMIT = 6;
 export async function GET(req: Request) {
   const user = await getCurrentUser();
   if (!user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  const limited = await rejectOverLimit(`search:${user.id}`, 60);
+  if (limited) return limited;
 
   const q = new URL(req.url).searchParams.get("q")?.trim().slice(0, 60) ?? "";
   if (q.length < 2) return NextResponse.json({ employees: [], clients: [], requests: [] });

@@ -4,11 +4,16 @@ import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
 import { DEV_LOGIN_ENABLED, isLocalHost } from "@/lib/dev-login";
 import { prisma } from "@/lib/prisma";
+import { clientIp, hit, resetLimit } from "@/lib/rate-limit";
 
 const credentialsSchema = z.object({
-  login: z.string().trim().toLowerCase().min(1),
-  password: z.string().min(1),
+  login: z.string().trim().toLowerCase().min(1).max(64),
+  password: z.string().min(1).max(128),
 });
+
+const LOGIN_WINDOW_MS = 15 * 60_000;
+const LOGIN_ATTEMPTS = 5;
+const LOGIN_ATTEMPTS_PER_IP = 30;
 
 // Compared against when the login does not exist, so response time does not reveal valid logins.
 const DUMMY_HASH = bcrypt.hashSync("marginflow-dummy-password", 10);
@@ -19,9 +24,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     Credentials({
       credentials: { login: {}, password: {} },
-      async authorize(raw) {
+      async authorize(raw, request) {
         const parsed = credentialsSchema.safeParse(raw);
         if (!parsed.success) return null;
+
+        // Counted per login + IP, not per login alone: nobody can lock another person out. Checked before bcrypt, which is slow on purpose.
+        const ip = clientIp(request.headers);
+        const attemptKey = `login:${ip}:${parsed.data.login}`;
+        if (!(await hit(`login-ip:${ip}`, LOGIN_ATTEMPTS_PER_IP, LOGIN_WINDOW_MS))) return null;
+        if (!(await hit(attemptKey, LOGIN_ATTEMPTS, LOGIN_WINDOW_MS))) return null;
 
         const user = await prisma.user.findUnique({
           where: { login: parsed.data.login },
@@ -29,6 +40,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
         const valid = await bcrypt.compare(parsed.data.password, user?.passwordHash ?? DUMMY_HASH);
         if (!user || !valid || !user.isActive) return null;
+        await resetLimit(attemptKey);
 
         return { id: user.id, name: `${user.employee.firstName} ${user.employee.lastName}` };
       },
