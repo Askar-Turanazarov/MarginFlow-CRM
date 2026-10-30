@@ -19,7 +19,7 @@ export async function GET(req: Request) {
   const [employees, clients, requests] = await Promise.all([
     prisma.employee.findMany({
       where: { OR: [{ firstName: has }, { lastName: has }, { position: has }] },
-      select: { id: true, firstName: true, lastName: true, position: true, status: true },
+      select: { id: true, firstName: true, lastName: true, position: true, status: true, trackByPhone: true },
       take: LIMIT,
     }),
     prisma.client.findMany({
@@ -35,7 +35,7 @@ export async function GET(req: Request) {
   ]);
 
   return NextResponse.json({
-    employees: employees.map((e) => ({ id: e.id, name: `${e.firstName} ${e.lastName}`, hint: e.position, status: e.status })),
+    employees: employees.map((e) => ({ id: e.id, name: `${e.firstName} ${e.lastName}`, hint: e.position, status: e.status, track: user.role !== "EMPLOYEE" && e.trackByPhone })),
     clients: clients.map((c) => ({ id: c.id, name: c.companyName, hint: c.contactName })),
     requests: requests.map((r) => ({ id: r.id, name: r.title, hint: r.client.companyName, status: r.status })),
   });

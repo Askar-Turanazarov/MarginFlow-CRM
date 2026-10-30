@@ -1,7 +1,7 @@
 "use client";
 
 import type { RequestStatus } from "@prisma/client";
-import { Info, MapPin } from "lucide-react";
+import { Info, MapPin, Navigation } from "lucide-react";
 import { motion } from "motion/react";
 import { useId, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
@@ -11,6 +11,7 @@ import { RequestStatusBadge } from "@/components/request-status-badge";
 import { EmptyState } from "@/components/page";
 import { Avatar } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "@/i18n/navigation";
 import { cityOf, type City } from "@/lib/cities";
 import { spring } from "@/lib/motion";
 import type { CityPerson } from "@/lib/presence";
@@ -40,6 +41,7 @@ export function CityMapPanel({ isAdmin, office, clients, cities, timezone }: Pro
   const format = useFormatter();
   const { data } = useCityPresence();
   const people = data?.people ?? [];
+  const tracked = data?.tracked ?? [];
   const pillId = useId();
   const [cityId, setCityId] = useState(cities[0]?.id);
   const city = cities.find((c) => c.id === cityId) ?? cities[0];
@@ -149,7 +151,8 @@ export function CityMapPanel({ isAdmin, office, clients, cities, timezone }: Pro
         </div>
       </div>
 
-      <Card className="lg:sticky lg:top-6">
+      <div className="grid gap-4 lg:sticky lg:top-6">
+      <Card>
         <CardHeader>
           <CardTitle>
             {t("map.outside")}
@@ -168,6 +171,12 @@ export function CityMapPanel({ isAdmin, office, clients, cities, timezone }: Pro
                     <div className="font-medium">{p.name}</div>
                     <div className="text-muted-foreground">{[reasonText(p), p.requestTitle].filter(Boolean).join(" · ")}</div>
                     <div className="nums text-xs text-muted-foreground">{t("map.wentOut", { time: time(p.exitAt) })}</div>
+                    {p.trackByPhone && (
+                      <Link href={`/track/${p.id}`} className="mt-0.5 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
+                        <Navigation className="size-3" />
+                        {t("track.follow")}
+                      </Link>
+                    )}
                   </div>
                 </li>
               ))}
@@ -175,6 +184,32 @@ export function CityMapPanel({ isAdmin, office, clients, cities, timezone }: Pro
           )}
         </CardContent>
       </Card>
+      {/* Tracked people are here in any status: "Outside" would miss someone who has just checked in. */}
+      {tracked.length > 0 && (
+        <Card data-testid="tracked-people">
+          <CardHeader>
+            <CardTitle>{t("track.listTitle")}</CardTitle>
+          </CardHeader>
+          <CardContent className="text-sm">
+            <ul className="grid gap-3">
+              {tracked.map((p) => (
+                <li key={p.id} className="flex items-center gap-3">
+                  <Avatar id={p.id} name={p.name} size="sm" />
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium">{p.name}</div>
+                    <div className="text-xs text-muted-foreground">{t(`status.${p.status}`)}</div>
+                  </div>
+                  <Link href={`/track/${p.id}`} className="inline-flex shrink-0 items-center gap-1 text-xs font-medium text-primary hover:underline">
+                    <Navigation className="size-3" />
+                    {t("track.follow")}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+      </div>
     </div>
   );
 }

@@ -3,10 +3,10 @@
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { useQuery } from "@tanstack/react-query";
 import { Command } from "cmdk";
-import { Building2, ClipboardList, Languages, Monitor, Moon, Search, Sun } from "lucide-react";
+import { Building2, ClipboardList, Languages, Monitor, Moon, Navigation, Search, Sun } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { LOCALE_NAMES, useSwitchLocale } from "@/components/locale-switcher";
 import { NAV_ICONS, type NavItem } from "@/components/nav-links";
 import { Avatar } from "@/components/ui/avatar";
@@ -16,7 +16,7 @@ import { routing } from "@/i18n/routing";
 import { cn } from "@/lib/utils";
 
 type Hit = { id: string; name: string; hint: string };
-type Results = { employees: Hit[]; clients: Hit[]; requests: Hit[] };
+type Results = { employees: (Hit & { track: boolean })[]; clients: Hit[]; requests: Hit[] };
 
 function useDebounced<T>(value: T, ms: number) {
   const [v, setV] = useState(value);
@@ -99,11 +99,19 @@ export function CommandPalette({
                 {results && results.employees.length > 0 && (
                   <Command.Group heading={t("people")} className={groupClass}>
                     {results.employees.map((e) => (
-                      <Command.Item key={e.id} value={`e-${e.id}`} className={itemClass} onSelect={() => run(() => router.push(`/employees/${e.id}`))}>
-                        <Avatar id={e.id} name={e.name} size="xs" />
-                        <span className="truncate">{e.name}</span>
-                        <span className="ml-auto truncate text-xs text-muted-foreground">{e.hint}</span>
-                      </Command.Item>
+                      <Fragment key={e.id}>
+                        <Command.Item value={`e-${e.id}`} className={itemClass} onSelect={() => run(() => router.push(`/employees/${e.id}`))}>
+                          <Avatar id={e.id} name={e.name} size="xs" />
+                          <span className="truncate">{e.name}</span>
+                          <span className="ml-auto truncate text-xs text-muted-foreground">{e.hint}</span>
+                        </Command.Item>
+                        {e.track && (
+                          <Command.Item value={`t-${e.id}`} className={itemClass} onSelect={() => run(() => router.push(`/track/${e.id}`))}>
+                            <Navigation />
+                            <span className="truncate">{t("track", { name: e.name })}</span>
+                          </Command.Item>
+                        )}
+                      </Fragment>
                     ))}
                   </Command.Group>
                 )}

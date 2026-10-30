@@ -30,6 +30,8 @@ export type CityPerson = {
   requestTitle: string | null;
   /** When the employee went out. */
   exitAt: string | null;
+  /** Has a live tracking page. */
+  trackByPhone: boolean;
 };
 
 type Rect = { name: string; x: number; y: number; width: number; height: number };
@@ -116,6 +118,7 @@ export async function getCityPresence(): Promise<CityPerson[]> {
         reason: e.currentExitReason,
         requestTitle: e.workDays[0].events[0]?.request?.title ?? null,
         exitAt: e.workDays[0].events[0]?.at.toISOString() ?? null,
+        trackByPhone: e.trackByPhone,
       },
     ];
   });
