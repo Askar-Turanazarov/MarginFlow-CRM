@@ -449,6 +449,7 @@
   },
   "track": {
     "title": "Слежение: {name}",
+    "viewsTitle": "Кто смотрел слежение",
     "listTitle": "Слежение по телефону",
     "follow": "Следить",
     "checkInPoint": "Приход",

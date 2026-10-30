@@ -449,6 +449,7 @@
   },
   "track": {
     "title": "Kuzatish: {name}",
+    "viewsTitle": "Kuzatishni kimlar ko‘rgan",
     "listTitle": "Telefon orqali kuzatish",
     "follow": "Kuzatish",
     "checkInPoint": "Kelish",

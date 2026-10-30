@@ -16,6 +16,7 @@
     "db:start": "node prisma/local-db.mjs",
     "db:migrate": "prisma migrate dev",
     "db:seed": "prisma db seed",
+    "db:cleanup": "tsx prisma/cleanup.ts",
     "postinstall": "prisma generate",
     "db:stop": "node prisma/local-db.mjs stop",
     "sim:on": "tsx src/lib/simulation/cli.ts on",

@@ -126,7 +126,7 @@
 | officeName, officeAddress | MarginFlow HQ, вымышленный адрес в Palo Alto |
 | officeLat, officeLng | `37.4419`, `-122.1430` |
 | locationIntervalMinutes | `5` |
-| locationRetentionDays | `90` |
+| locationRetentionDays | `30` |
 
 ### AgentToken — доступ ИИ-агента
 | Поле | Тип | Примечание |
@@ -265,7 +265,8 @@ lateMinutes = isLate ? floor(diffSec / 60) : 0
   - `OUT_OF_OFFICE` — последняя точка на карте с причиной и временем;
   - `OFF_DUTY` — нигде.
 - Если браузер не дал доступ к геолокации, отметка всё равно работает. На карте сотрудник попадает в список «Вне офиса, место неизвестно».
-- Точки старше `locationRetentionDays` (90 дней) удаляются ежедневной очисткой.
+- Точки старше `locationRetentionDays` (30 дней) удаляются ежедневной очисткой: `/api/cron/retention` с ключом `CRON_SECRET`, локально `npm run db:cleanup`. Отчёты считаются по событиям, поэтому не меняются.
+- Открытие страницы слежения записывается в `AuditLog` (`track.view`, не чаще раза в час на пару зритель + сотрудник); админ видит список на `/track/[id]`.
 - В демо точки вымышленные: Palo Alto, Mountain View, Menlo Park.
 
 ### 5.1. Общий приём позиций

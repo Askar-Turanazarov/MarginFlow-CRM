@@ -449,6 +449,7 @@
   },
   "track": {
     "title": "Tracking: {name}",
+    "viewsTitle": "Who viewed this tracking",
     "listTitle": "Phone tracking",
     "follow": "Follow",
     "checkInPoint": "Check-in",

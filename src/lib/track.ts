@@ -33,6 +33,32 @@ export async function getTrackedPeople(): Promise<TrackedPerson[]> {
   return people.map((e) => ({ id: e.id, name: `${e.firstName} ${e.lastName}`, status: e.status }));
 }
 
+const VIEW_LOG_INTERVAL_MS = 60 * 60_000;
+const VIEW_ACTION = "track.view";
+
+/** Who looked at whose real location. The page polls every few seconds, so at most one row per hour for a viewer + employee. */
+export async function recordTrackView(viewerId: string, employeeId: string) {
+  const recent = await prisma.auditLog.findFirst({
+    where: { action: VIEW_ACTION, actor: viewerId, targetId: employeeId, at: { gte: new Date(Date.now() - VIEW_LOG_INTERVAL_MS) } },
+    select: { id: true },
+  });
+  if (!recent) await prisma.auditLog.create({ data: { actor: viewerId, action: VIEW_ACTION, targetId: employeeId } });
+}
+
+export async function getTrackViews(employeeId: string, take = 20) {
+  const views = await prisma.auditLog.findMany({
+    where: { action: VIEW_ACTION, targetId: employeeId },
+    orderBy: { at: "desc" },
+    take,
+  });
+  const viewers = await prisma.user.findMany({
+    where: { id: { in: views.map((v) => v.actor) } },
+    select: { id: true, employee: { select: { firstName: true, lastName: true } } },
+  });
+  const names = new Map(viewers.map((u) => [u.id, `${u.employee.firstName} ${u.employee.lastName}`]));
+  return views.map((v) => ({ id: v.id, at: v.at, name: names.get(v.actor) ?? v.actor }));
+}
+
 /** null — no such employee, or they are not marked for tracking. */
 export async function getTrack(employeeId: string): Promise<TrackData | null> {
   const date = officeDayDate(new Date(), await getOfficeSettings());

@@ -1,7 +1,7 @@
-import { createHash, timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { ingestPositions, positionsBodySchema, type PositionInput } from "@/lib/positions";
 import { rejectOverLimit } from "@/lib/rate-limit";
+import { bearerMatches } from "@/lib/secret";
 import { getCurrentUser } from "@/lib/session";
 
 const MAX_BODY_BYTES = 256 * 1024;
@@ -20,19 +20,9 @@ function parseJson(text: string): unknown {
 //   phone in the browser: the signed-in session, only the user's own positions.
 // Body: { "positions": [{ "employeeId": "...", "at"?: ISO, "office"?: { x, y }, "geo"?: { lat, lng, accuracy? } }] }
 
-function isSensorToken(header: string | null): boolean {
-  const expected = process.env.POSITIONS_API_TOKEN;
-  if (!expected || expected === "change-me" || expected.length < 16) return false; // sensors disabled until a real token is set
-  const given = header?.match(/^Bearer (.+)$/)?.[1];
-  if (!given) return false;
-  // Compare hashes: equal length for timingSafeEqual and no early exit on the first different character.
-  const hash = (s: string) => createHash("sha256").update(s).digest();
-  return timingSafeEqual(hash(given), hash(expected));
-}
-
 export async function POST(request: Request) {
-  const authHeader = request.headers.get("authorization");
-  const sensor = isSensorToken(authHeader);
+  // Sensors are disabled until a real token is set.
+  const sensor = bearerMatches(request.headers.get("authorization"), process.env.POSITIONS_API_TOKEN);
   const user = sensor ? null : await getCurrentUser();
   if (!sensor && !user) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 

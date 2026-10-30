@@ -236,7 +236,7 @@ model OfficeSettings {
   officeLat               Float    @default(37.4419)
   officeLng               Float    @default(-122.143)
   locationIntervalMinutes Int      @default(5)
-  locationRetentionDays   Int      @default(90)
+  locationRetentionDays   Int      @default(30)
   simulationEnabled       Boolean  @default(false)
   updatedAt               DateTime @updatedAt
 }
