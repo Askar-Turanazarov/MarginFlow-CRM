@@ -179,7 +179,7 @@ export function OfficePlanEditor({ desks, zones, employees, imageUrl, isTestPlan
 
   async function upload(file: File) {
     setPlanError(null);
-    if (file.size > 5 * 1024 * 1024) return setPlanError(t("officePlan.errors.fileSize"));
+    if (file.size > 4 * 1024 * 1024) return setPlanError(t("officePlan.errors.fileSize"));
     const formData = new FormData();
     formData.set("image", file);
     startTransition(async () => {

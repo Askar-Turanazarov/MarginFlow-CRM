@@ -32,8 +32,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
-  // Office plan images (up to 5 MB) are uploaded through a Server Action.
-  experimental: { serverActions: { bodySizeLimit: "6mb", allowedOrigins: TUNNEL_ORIGINS } },
+  // Office plan images (up to 4 MB) are uploaded through a Server Action. Vercel refuses bodies over 4.5 MB.
+  experimental: { serverActions: { bodySizeLimit: "4.5mb", allowedOrigins: TUNNEL_ORIGINS } },
 };
 
 export default createNextIntlPlugin()(nextConfig);

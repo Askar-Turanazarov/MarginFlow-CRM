@@ -6,6 +6,7 @@
     "predev": "node prisma/local-db.mjs",
     "dev": "next dev --turbopack -H 127.0.0.1",
     "build": "next build --turbopack",
+    "build:vercel": "prisma generate && prisma migrate deploy && next build --turbopack",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

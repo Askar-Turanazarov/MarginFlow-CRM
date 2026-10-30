@@ -16,7 +16,7 @@ export type PlanErrorKey =
   | "notFound";
 export type PlanResult = { error?: PlanErrorKey; fieldErrors?: Partial<Record<"code" | "pcNumber" | "name", PlanErrorKey>> };
 
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 
 // Coordinates are shares (0..1) of the plan image, so they don't depend on the display size.
 const share = z.number().min(0).max(1);

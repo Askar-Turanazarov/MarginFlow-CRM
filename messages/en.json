@@ -251,7 +251,7 @@
     "free": "Free",
     "testPlan": "This is the test plan. Upload an image of your office plan to replace it.",
     "upload": "Upload plan image",
-    "uploadHint": "PNG, JPG or WebP, up to 5 MB. Desks and zones keep their relative positions.",
+    "uploadHint": "PNG, JPG or WebP, up to 4 MB. Desks and zones keep their relative positions.",
     "uploading": "Uploading…",
     "useTestPlan": "Use test plan",
     "newDesk": "New desk",
@@ -273,7 +273,7 @@
       "deskCodeTaken": "This desk number already exists",
       "pcTaken": "This computer number is already used",
       "fileType": "Upload a PNG, JPG or WebP image",
-      "fileSize": "The file is larger than 5 MB",
+      "fileSize": "The file is larger than 4 MB",
       "notFound": "Not found"
     },
     "personNow": "Employee now",

@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 enum Role {
@@ -227,18 +228,20 @@ model LocationPoint {
 }
 
 model OfficeSettings {
-  id                      Int      @id @default(1)
-  workdayStart            String   @default("09:00")
-  lateGraceMinutes        Int      @default(5)
-  timezone                String   @default("America/Los_Angeles")
-  officeName              String   @default("MarginFlow HQ")
-  officeAddress           String   @default("")
-  officeLat               Float    @default(37.4419)
-  officeLng               Float    @default(-122.143)
-  locationIntervalMinutes Int      @default(5)
-  locationRetentionDays   Int      @default(30)
-  simulationEnabled       Boolean  @default(false)
-  updatedAt               DateTime @updatedAt
+  id                      Int       @id @default(1)
+  workdayStart            String    @default("09:00")
+  lateGraceMinutes        Int       @default(5)
+  timezone                String    @default("America/Los_Angeles")
+  officeName              String    @default("MarginFlow HQ")
+  officeAddress           String    @default("")
+  officeLat               Float     @default(37.4419)
+  officeLng               Float     @default(-122.143)
+  locationIntervalMinutes Int       @default(5)
+  locationRetentionDays   Int       @default(30)
+  simulationState         Json?
+  simulationTickAt        DateTime?
+  simulationEnabled       Boolean   @default(false)
+  updatedAt               DateTime  @updatedAt
 }
 
 model AuditLog {

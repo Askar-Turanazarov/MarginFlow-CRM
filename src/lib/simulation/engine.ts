@@ -3,12 +3,16 @@ import { getOfficeSettings, lateness, officeDayDate, workdayStartAt, type Office
 import { ingestPositions, PLAN_POSITION_TTL_MS, type PositionInput } from "@/lib/positions";
 import { prisma } from "@/lib/prisma";
 
-// Movement simulator. Runs inside the Next.js server (src/instrumentation.ts), one step every 3 seconds,
-// while OfficeSettings.simulationEnabled is on (npm run sim:on / sim:off, or the admin button).
+// Movement simulator: one step every 3 seconds while OfficeSettings.simulationEnabled is on (npm run sim:on / sim:off, or the admin button).
+// Locally a loop inside the server takes the steps (src/instrumentation.ts). Vercel has no always-on process, so there
+// the polling routes take them (/api/presence): people move only while someone has the page open.
+// Walkers live in the database, so any server instance can take the next step.
 // For the demo it checks in everyone who has no workday today yet (checkInEveryone), then moves people
 // and sends every position through ingestPositions() — the same entry point real sensors and phones use.
 
 export const TICK_MS = 3_000;
+// A little under the step: a timer firing slightly early must not skip its step.
+const CLAIM_INTERVAL_MS = TICK_MS - 500;
 
 type Point = { x: number; y: number };
 type GeoPoint = { lat: number; lng: number };
@@ -25,8 +29,7 @@ const WALK_STEP_M = 120;
 const WALK_RADIUS_M = 3_000;
 const MAX_CLIENT_DISTANCE_M = 80_000; // clients in other cities (e.g. Tashkent) are not "driven" to
 
-const state = globalThis as unknown as { __mfSimWalkers?: Map<string, Walker>; __mfSimTimer?: NodeJS.Timeout };
-const walkers = (state.__mfSimWalkers ??= new Map<string, Walker>());
+const state = globalThis as unknown as { __mfSimTimer?: NodeJS.Timeout };
 
 const rand = (min: number, max: number) => min + Math.random() * (max - min);
 const randInt = (min: number, max: number) => Math.floor(rand(min, max + 1));
@@ -67,12 +70,32 @@ const pointInZone = (z: { x: number; y: number; width: number; height: number })
   y: z.y + z.height * rand(0.25, 0.85),
 });
 
+/** Only one caller wins each step, however many tabs and server instances ask at the same moment. */
+async function claimStep(now: Date) {
+  const { count } = await prisma.officeSettings.updateMany({
+    where: {
+      id: 1,
+      simulationEnabled: true,
+      OR: [{ simulationTickAt: null }, { simulationTickAt: { lt: new Date(now.getTime() - CLAIM_INTERVAL_MS) } }],
+    },
+    data: { simulationTickAt: now },
+  });
+  return count === 1;
+}
+
+/** Takes a step if one is due. Never throws: a failed step must not break the request that triggered it. */
+export async function tickIfDue() {
+  try {
+    if (await claimStep(new Date())) await tick();
+  } catch (error) {
+    console.error("[simulation] step failed:", error instanceof Error ? error.message : error);
+  }
+}
+
 async function tick() {
   const settings = await prisma.officeSettings.findUnique({ where: { id: 1 } });
-  if (!settings?.simulationEnabled) {
-    walkers.clear();
-    return;
-  }
+  if (!settings?.simulationEnabled) return;
+  const walkers = new Map(Object.entries((settings.simulationState ?? {}) as Record<string, Walker>));
   const clock = await getOfficeSettings();
   const date = officeDayDate(new Date(), clock);
   const office: GeoPoint = { lat: settings.officeLat, lng: settings.officeLng };
@@ -139,6 +162,10 @@ async function tick() {
 
   for (const id of walkers.keys()) if (!seen.has(id)) walkers.delete(id);
   if (positions.length) await ingestPositions("SIMULATOR", positions);
+  await prisma.officeSettings.updateMany({
+    where: { id: 1, simulationEnabled: true },
+    data: { simulationState: Object.fromEntries(walkers) as Prisma.InputJsonObject },
+  });
 }
 
 /**
@@ -232,16 +259,12 @@ export function startSimulationLoop() {
   state.__mfSimTimer = setInterval(async () => {
     if (running) return; // a slow step must not overlap the next one
     running = true;
-    try {
-      await tick();
-    } catch (error) {
-      console.error("[simulation] step failed:", error instanceof Error ? error.message : error);
-    } finally {
-      running = false;
-    }
+    await tickIfDue();
+    running = false;
   }, TICK_MS);
 }
 
 export async function setSimulationEnabled(enabled: boolean) {
-  await prisma.officeSettings.upsert({ where: { id: 1 }, update: { simulationEnabled: enabled }, create: { id: 1, simulationEnabled: enabled } });
+  const data = { simulationEnabled: enabled, simulationState: Prisma.DbNull, simulationTickAt: null };
+  await prisma.officeSettings.upsert({ where: { id: 1 }, update: data, create: { id: 1, ...data } });
 }

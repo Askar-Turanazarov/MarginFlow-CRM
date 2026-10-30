@@ -251,7 +251,7 @@
     "free": "Boʻsh",
     "testPlan": "Hozir test rejasi koʻrsatilmoqda. Uni almashtirish uchun ofisingiz rejasi rasmini yuklang.",
     "upload": "Reja rasmini yuklash",
-    "uploadHint": "PNG, JPG yoki WebP, 5 MB gacha. Joylar va zonalar rasmga nisbatan joyida qoladi.",
+    "uploadHint": "PNG, JPG yoki WebP, 4 MB gacha. Joylar va zonalar rasmga nisbatan joyida qoladi.",
     "uploading": "Yuklanmoqda…",
     "useTestPlan": "Test rejasini qaytarish",
     "newDesk": "Yangi joy",
@@ -273,7 +273,7 @@
       "deskCodeTaken": "Bunday raqamli joy allaqachon bor",
       "pcTaken": "Bu kompyuter raqami band",
       "fileType": "PNG, JPG yoki WebP rasm yuklang",
-      "fileSize": "Fayl 5 MB dan katta",
+      "fileSize": "Fayl 4 MB dan katta",
       "notFound": "Topilmadi"
     },
     "personNow": "Xodim hozir",
