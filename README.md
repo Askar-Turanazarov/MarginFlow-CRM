@@ -108,7 +108,16 @@ The demo data also has 20 desks (13 occupied), 3 zones, 7 clients (California an
 | `npm run db:migrate` | Apply Prisma migrations |
 | `npm run db:seed` | Load mock data |
 | `npm run sim:on` / `sim:off` | Turn the movement simulation on / off (while `npm run dev` is running) |
+| `npm run tunnel` | Temporary public https address for testing from a phone (needs `tools/cloudflared.exe`, not in Git) |
 | `npm run mcp` | MCP server for an AI agent: http://127.0.0.1:3333/mcp (needs `MCP_API_KEY` in `.env`) |
+
+### Tracking an employee from a phone
+
+1. Download [cloudflared](https://github.com/cloudflare/cloudflared/releases) to `tools/cloudflared.exe`.
+2. Run `npm run dev`, then `npm run tunnel` in a second terminal, and copy the `https://…trycloudflare.com` address. It changes on every start.
+3. On the phone: open the address, sign in as `field.tracker` (password: `SEED_TRACKER_PASSWORD` in `.env`), tap the check-in button, then "Turn on tracking", and allow geolocation. Keep the page open.
+4. On the computer: sign in as an admin or manager, open the city map and follow the tracking link.
+5. Stop the tunnel when you finish: while it runs, the development server is reachable from the internet, and the phone sends real coordinates.
 
 ### Notes
 
@@ -223,7 +232,16 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 | `npm run db:migrate` | Prisma migratsiyalarini qoʻllash |
 | `npm run db:seed` | Mock maʼlumotlarni yuklash |
 | `npm run sim:on` / `sim:off` | Harakat imitatsiyasini yoqish / oʻchirish (`npm run dev` ishlab turganda) |
+| `npm run tunnel` | Telefondan tekshirish uchun vaqtinchalik ochiq https manzil (`tools/cloudflared.exe` kerak, Gitda yoʻq) |
 | `npm run mcp` | AI-agent uchun MCP server: http://127.0.0.1:3333/mcp (`.env` da `MCP_API_KEY` kerak) |
+
+### Xodimni telefon orqali kuzatish
+
+1. [cloudflared](https://github.com/cloudflare/cloudflared/releases) ni `tools/cloudflared.exe` ga yuklab oling.
+2. `npm run dev`, soʻng ikkinchi terminalda `npm run tunnel` ni ishga tushiring va `https://…trycloudflare.com` manzilini nusxalang. Manzil har safar oʻzgaradi.
+3. Telefonda: manzilni oching, `field.tracker` sifatida kiring (parol: `.env` dagi `SEED_TRACKER_PASSWORD`), kelganingizni belgilang, kuzatishni yoqing va geolokatsiyaga ruxsat bering. Sahifani ochiq qoldiring.
+4. Kompyuterda: admin yoki menejer sifatida kiring, shahar xaritasini oching va kuzatish havolasini bosing.
+5. Tugatgach, tunnelni toʻxtating: u ishlab turganda ishlab chiqish serveri internetdan ochiq boʻladi, telefon esa haqiqiy koordinatalarni yuboradi.
 
 ### Eslatmalar
 
@@ -338,7 +356,16 @@ npm run db:stop
 | `npm run db:migrate` | Применить миграции Prisma |
 | `npm run db:seed` | Залить мок-данные |
 | `npm run sim:on` / `sim:off` | Включить / выключить имитацию движения (пока работает `npm run dev`) |
+| `npm run tunnel` | Временный публичный https-адрес для проверки с телефона (нужен `tools/cloudflared.exe`, его нет в Git) |
 | `npm run mcp` | MCP-сервер для ИИ-агента: http://127.0.0.1:3333/mcp (нужен `MCP_API_KEY` в `.env`) |
+
+### Слежение за сотрудником с телефона
+
+1. Скачайте [cloudflared](https://github.com/cloudflare/cloudflared/releases) в `tools/cloudflared.exe`.
+2. Запустите `npm run dev`, затем во втором терминале `npm run tunnel` и скопируйте адрес `https://…trycloudflare.com`. Он меняется при каждом запуске.
+3. На телефоне: откройте адрес, войдите как `field.tracker` (пароль — `SEED_TRACKER_PASSWORD` в `.env`), нажмите «Я пришёл», затем «Включить слежение» и разрешите геолокацию. Страницу не закрывайте.
+4. На компьютере: войдите как админ или менеджер, откройте карту города и перейдите по ссылке «Следить».
+5. Закончив, остановите туннель: пока он работает, сервер разработки доступен из интернета, а телефон шлёт настоящие координаты.
 
 ### Примечания
 
