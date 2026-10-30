@@ -92,6 +92,10 @@
   --surface: rgb(251 250 247 / 0.9);
   --glass-bg: rgb(252 250 246 / 0.56);
   --glass-strong: rgb(252 250 246 / 0.74);
+  --liquid-bg: rgb(252 250 246 / 0.34);
+  --liquid-bg-scrolled: rgb(252 250 246 / 0.46);
+  --liquid-hi: rgb(255 255 255 / 0.32);
+  --liquid-rim: rgb(255 255 255 / 0.38);
   --glass-hi: rgb(255 255 255 / 0.85);
   --glass-edge: rgb(255 255 255 / 0.9);
   --glass-edge-lo: rgb(255 255 255 / 0.18);
@@ -138,6 +142,10 @@
   --surface: rgb(26 29 29 / 0.86);
   --glass-bg: rgb(34 38 37 / 0.5);
   --glass-strong: rgb(34 38 37 / 0.7);
+  --liquid-bg: rgb(34 38 37 / 0.32);
+  --liquid-bg-scrolled: rgb(34 38 37 / 0.44);
+  --liquid-hi: rgb(255 255 255 / 0.07);
+  --liquid-rim: rgb(255 255 255 / 0.1);
   --glass-hi: rgb(255 255 255 / 0.12);
   --glass-edge: rgb(255 255 255 / 0.22);
   --glass-edge-lo: rgb(255 255 255 / 0.04);
@@ -198,8 +206,8 @@
   position: relative;
   isolation: isolate;
   background-color: var(--glass-bg);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  /* Only the unprefixed property: with both, the build keeps just -webkit-, which Chromium ignores. */
+  backdrop-filter: blur(36px) saturate(190%);
   box-shadow: var(--shadow-glass), inset 0 1px 0 var(--glass-hi);
   /* Edge: bright on the lit top-left, fading downwards — a 1 px masked ring. */
   &::before {
@@ -237,14 +245,12 @@
 @utility glass-overlay {
   background-color: var(--popover);
   backdrop-filter: blur(32px) saturate(190%);
-  -webkit-backdrop-filter: blur(32px) saturate(190%);
   box-shadow: var(--shadow-overlay), inset 0 1px 0 var(--glass-hi), 0 0 0 1px var(--border);
 }
 
 /* Liquid lens: real refraction, Chromium only (html[data-lens] is set by script). */
 @utility lens {
   backdrop-filter: blur(3px) saturate(180%) brightness(1.05);
-  -webkit-backdrop-filter: blur(3px) saturate(180%) brightness(1.05);
 }
 html[data-lens] .lens {
   backdrop-filter: url(#liquid-lens) blur(2px) saturate(180%) brightness(1.05);
@@ -314,6 +320,17 @@ html[data-lens] .lens {
     scrollbar-width: thin;
     scrollbar-color: color-mix(in oklab, var(--foreground) 22%, transparent) transparent;
   }
+}
+
+/* Liquid glass for the phone bars: thinner tint, strong blur, a lit rim. No url(#liquid-lens) here: it cancels the blur. */
+html:not([data-design="tactile"]) .glass.liquid-bar {
+  background-color: var(--liquid-bg);
+  background-image: linear-gradient(180deg, var(--liquid-hi), transparent 60%);
+  backdrop-filter: blur(32px) saturate(230%) brightness(1.08);
+  box-shadow: var(--shadow-glass), inset 0 1px 0 var(--glass-hi), inset 0 -1px 0 var(--glass-edge-lo), inset 0 0 14px var(--liquid-rim);
+}
+html:not([data-design="tactile"]) .glass-strong.liquid-bar {
+  background-color: var(--liquid-bg-scrolled);
 }
 
 /* Eye care & accessibility fallbacks. */
