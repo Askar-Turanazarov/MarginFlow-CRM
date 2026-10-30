@@ -84,6 +84,7 @@ async function tick() {
     prisma.employee.findMany({
       where: {
         status: { in: ["IN_OFFICE", "OUT_OF_OFFICE"] },
+        trackByPhone: false,
         user: { isActive: true },
         workDays: { some: { date, closed: false } },
       },
@@ -147,7 +148,7 @@ async function tick() {
  */
 async function checkInEveryone(clock: OfficeClock, date: Date) {
   const absent = await prisma.employee.findMany({
-    where: { user: { isActive: true }, workDays: { none: { date } } },
+    where: { trackByPhone: false, user: { isActive: true }, workDays: { none: { date } } },
     select: { id: true, user: { select: { id: true } } },
   });
   const now = new Date();

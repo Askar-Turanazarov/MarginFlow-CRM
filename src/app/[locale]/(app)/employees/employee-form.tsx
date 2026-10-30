@@ -103,6 +103,14 @@ export function EmployeeForm({ id, initial, desks, roleLocked }: Props) {
           </Field>
         </div>
 
+        <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl bg-foreground/[.03] px-4 py-3 text-sm">
+          <span className="grid gap-0.5">
+            {t("form.trackByPhone")}
+            <span className="text-xs text-muted-foreground">{t("form.trackByPhoneHint")}</span>
+          </span>
+          <Switch name="trackByPhone" value="on" defaultChecked={v.trackByPhone} data-testid="track-by-phone" />
+        </label>
+
         {id && (
           <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl bg-foreground/[.03] px-4 py-3 text-sm">
             {t("form.active")}

@@ -94,6 +94,8 @@ model Employee {
   planX             Float?
   planY             Float?
   planAt            DateTime?
+  // Followed live from the phone: positions every 10 s from check-in. The simulator leaves such people alone.
+  trackByPhone      Boolean        @default(false)
   createdAt         DateTime       @default(now())
   updatedAt         DateTime       @updatedAt
 

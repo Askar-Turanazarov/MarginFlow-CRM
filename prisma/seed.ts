@@ -184,6 +184,26 @@ async function main() {
     }
   }
 
+  // Followed live from a phone (fictional person, no desk): the simulator does not touch them.
+  const trackerPassword = await bcrypt.hash(requireEnv("SEED_TRACKER_PASSWORD"), 10);
+  const tracker = {
+    firstName: "Даврон",
+    lastName: "Полевой",
+    position: "Выездной специалист",
+    phone: "(650) 555-0199",
+    email: "field.tracker@marginflow.test",
+    trackByPhone: true,
+  };
+  const existingTracker = await prisma.user.findUnique({ where: { login: "field.tracker" } });
+  if (existingTracker) {
+    await prisma.employee.update({ where: { id: existingTracker.employeeId }, data: tracker });
+    await prisma.user.update({ where: { login: "field.tracker" }, data: { passwordHash: trackerPassword } });
+  } else {
+    await prisma.user.create({
+      data: { login: "field.tracker", role: "EMPLOYEE", passwordHash: trackerPassword, employee: { create: tracker } },
+    });
+  }
+
   if ((await prisma.client.count()) === 0) {
     for (const c of clients) {
       const email = `contact@${c.companyName.toLowerCase().replace(/[^a-z]+/g, "")}.test`;
@@ -215,7 +235,7 @@ async function main() {
   }
 
   console.log(
-    `Seeded ${desks.length} desks, ${zones.length} zones, ${people.length} users, ${clients.length} clients, ${requests.length} requests.`,
+    `Seeded ${desks.length} desks, ${zones.length} zones, ${people.length + 1} users, ${clients.length} clients, ${requests.length} requests.`,
   );
 }
 

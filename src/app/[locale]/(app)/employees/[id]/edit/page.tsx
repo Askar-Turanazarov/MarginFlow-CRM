@@ -33,6 +33,7 @@ export default async function EditEmployeePage({ params }: { params: Promise<{ i
           role: user.role,
           deskId: user.employee.deskId ?? "",
           isActive: user.isActive,
+          trackByPhone: user.employee.trackByPhone,
         }}
       />
     </div>

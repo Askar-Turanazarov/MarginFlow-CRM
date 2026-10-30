@@ -27,6 +27,7 @@ export type EmployeeFormValues = {
   role: Role;
   deskId: string;
   isActive: boolean;
+  trackByPhone: boolean;
 };
 
 export type EmployeeFormState = {
@@ -60,6 +61,7 @@ const schema = z.object({
   role: z.enum(["EMPLOYEE", "MANAGER"]).optional(),
   deskId: z.string(),
   isActive: z.boolean(),
+  trackByPhone: z.boolean(),
 });
 
 export async function saveEmployee(_prev: EmployeeFormState, formData: FormData): Promise<EmployeeFormState> {
@@ -75,6 +77,7 @@ export async function saveEmployee(_prev: EmployeeFormState, formData: FormData)
     role: (formData.get("role") as string | null) || undefined,
     deskId: String(formData.get("deskId") ?? ""),
     isActive: id ? formData.get("isActive") === "on" : true,
+    trackByPhone: formData.get("trackByPhone") === "on",
   };
   const values: EmployeeFormValues = {
     ...raw,
@@ -120,7 +123,7 @@ export async function saveEmployee(_prev: EmployeeFormState, formData: FormData)
     }
   }
 
-  const employee = { firstName: data.firstName, lastName: data.lastName, position: data.position, deskId };
+  const employee = { firstName: data.firstName, lastName: data.lastName, position: data.position, deskId, trackByPhone: data.trackByPhone };
   const passwordHash = data.password ? await bcrypt.hash(data.password, 10) : undefined;
 
   try {

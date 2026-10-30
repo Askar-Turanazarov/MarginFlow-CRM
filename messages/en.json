@@ -130,7 +130,9 @@
       "notFound": "Employee not found"
     },
     "sectionPerson": "Person",
-    "sectionAccess": "Sign-in and desk"
+    "sectionAccess": "Sign-in and desk",
+    "trackByPhone": "Phone tracking",
+    "trackByPhoneHint": "Position is sent from the phone every 10 seconds, from check-in until the end of work. Followed live on a separate page."
   },
   "common": {
     "save": "Save",

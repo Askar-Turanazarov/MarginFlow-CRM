@@ -15,7 +15,7 @@ export default async function NewEmployeePage() {
       <EmployeeForm
         desks={desks}
         roleLocked={false}
-        initial={{ firstName: "", lastName: "", position: "", login: "", role: "EMPLOYEE", deskId: "", isActive: true }}
+        initial={{ firstName: "", lastName: "", position: "", login: "", role: "EMPLOYEE", deskId: "", isActive: true, trackByPhone: false }}
       />
     </div>
   );

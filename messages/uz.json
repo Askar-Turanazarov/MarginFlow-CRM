@@ -130,7 +130,9 @@
       "notFound": "Xodim topilmadi"
     },
     "sectionPerson": "Xodim",
-    "sectionAccess": "Kirish va ish joyi"
+    "sectionAccess": "Kirish va ish joyi",
+    "trackByPhone": "Telefon orqali kuzatish",
+    "trackByPhoneHint": "Joylashuv telefondan har 10 soniyada yuboriladi — kelgandan ish tugaguncha. Xodimni alohida sahifada kuzatish mumkin."
   },
   "common": {
     "save": "Saqlash",
