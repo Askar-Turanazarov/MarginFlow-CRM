@@ -5,6 +5,7 @@ import { redirect } from "@/i18n/navigation";
 import { prisma } from "@/lib/prisma";
 
 // The role is read from the database on every request, so role changes and deactivation apply at once.
+// A password change raises sessionVersion, which signs out every session issued before it.
 export async function getCurrentUser() {
   const session = await auth();
   if (!session?.user?.id) return null;
@@ -13,7 +14,7 @@ export async function getCurrentUser() {
     where: { id: session.user.id },
     include: { employee: { include: { desk: true } } },
   });
-  return user?.isActive ? user : null;
+  return user?.isActive && user.sessionVersion === (session.user.sessionVersion ?? 0) ? user : null;
 }
 
 export type CurrentUser = NonNullable<Awaited<ReturnType<typeof getCurrentUser>>>;

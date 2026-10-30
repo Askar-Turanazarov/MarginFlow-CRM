@@ -63,16 +63,17 @@ enum ZoneKind {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  login        String   @unique
-  passwordHash String
-  role         Role     @default(EMPLOYEE)
-  locale       Locale   @default(en)
-  isActive     Boolean  @default(true)
-  employeeId   String   @unique
-  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id             String   @id @default(cuid())
+  login          String   @unique
+  passwordHash   String
+  role           Role     @default(EMPLOYEE)
+  locale         Locale   @default(en)
+  isActive       Boolean  @default(true)
+  sessionVersion Int      @default(0)
+  employeeId     String   @unique
+  employee       Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
   createdEvents AttendanceEvent[] @relation("EventCreatedBy")
   editedEvents  AttendanceEvent[] @relation("EventEditedBy")

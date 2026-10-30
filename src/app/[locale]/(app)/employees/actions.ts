@@ -134,7 +134,7 @@ export async function saveEmployee(_prev: EmployeeFormState, formData: FormData)
           login: data.login,
           role,
           isActive: data.isActive,
-          ...(passwordHash && { passwordHash }),
+          ...(passwordHash && { passwordHash, sessionVersion: { increment: 1 } }),
           employee: { update: employee },
         },
       });

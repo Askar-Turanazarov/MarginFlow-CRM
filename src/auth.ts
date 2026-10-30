@@ -6,6 +6,12 @@ import { DEV_LOGIN_ENABLED, isLocalHost } from "@/lib/dev-login";
 import { prisma } from "@/lib/prisma";
 import { clientIp, hit, resetLimit } from "@/lib/rate-limit";
 
+declare module "next-auth" {
+  interface User {
+    sessionVersion?: number;
+  }
+}
+
 const credentialsSchema = z.object({
   login: z.string().trim().toLowerCase().min(1).max(64),
   password: z.string().min(1).max(128),
@@ -42,7 +48,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user || !valid || !user.isActive) return null;
         await resetLimit(attemptKey);
 
-        return { id: user.id, name: `${user.employee.firstName} ${user.employee.lastName}` };
+        return { id: user.id, name: `${user.employee.firstName} ${user.employee.lastName}`, sessionVersion: user.sessionVersion };
       },
     }),
     // TEMPORARY, `npm run dev` only (see src/lib/dev-login.ts): quick login by login name, no password.
@@ -58,15 +64,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               if (!login.success) return null;
               const user = await prisma.user.findUnique({ where: { login: login.data }, include: { employee: true } });
               if (!user?.isActive) return null;
-              return { id: user.id, name: `${user.employee.firstName} ${user.employee.lastName}` };
+              return { id: user.id, name: `${user.employee.firstName} ${user.employee.lastName}`, sessionVersion: user.sessionVersion };
             },
           }),
         ]
       : []),
   ],
   callbacks: {
+    jwt({ token, user }) {
+      if (user) token.sessionVersion = user.sessionVersion;
+      return token;
+    },
     session({ session, token }) {
       if (token.sub) session.user.id = token.sub;
+      session.user.sessionVersion = token.sessionVersion as number | undefined;
       return session;
     },
   },
