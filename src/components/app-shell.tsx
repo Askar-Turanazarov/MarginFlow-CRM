@@ -11,6 +11,7 @@ import { NAV_ICONS, NavLinks, useActiveHref, type NavItem } from "@/components/n
 import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { DesignSwitcher } from "@/components/ui/design-switcher";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { Tooltip } from "@/components/ui/tooltip";
@@ -130,7 +131,7 @@ export function AppShell({
       >
         <div className="flex h-11 items-center gap-2.5 px-0.5">
           <BrandMark />
-          <span className={cn("truncate text-[0.9375rem] font-semibold tracking-tight transition-opacity duration-200", rail && "opacity-0")}>
+          <span data-plate className={cn("truncate text-[0.9375rem] font-semibold tracking-tight transition-opacity duration-200", rail && "opacity-0")}>
             MarginFlow
           </span>
         </div>
@@ -165,6 +166,7 @@ export function AppShell({
           {day && !rail && <div data-testid="sidebar-day">{day}</div>}
           {!rail && (
             <div className="flex flex-col gap-2">
+              <DesignSwitcher className="w-full" />
               <ThemeSwitcher compact />
               <LocaleSwitcher className="w-full" />
             </div>
@@ -199,12 +201,12 @@ export function AppShell({
       {/* ---------- Phone top bar ---------- */}
       <header
         className={cn(
-          "glass sticky top-2 z-40 mx-3 mt-2 flex h-14 items-center gap-2 rounded-2xl px-2.5 transition-[background-color] duration-300 md:hidden",
+          "glass liquid-bar sticky top-2 z-40 mx-3 mt-2 flex h-14 items-center gap-2 rounded-2xl px-2.5 transition-[background-color] duration-300 md:hidden",
           scrolled && "glass-strong",
         )}
       >
         <BrandMark />
-        <span className="truncate font-semibold tracking-tight">MarginFlow</span>
+        <span data-plate className="truncate font-semibold tracking-tight">MarginFlow</span>
         {simulationLabel && (
           <span className="size-2 animate-breathe rounded-full bg-sig-info text-sig-info" title={simulationLabel} />
         )}
@@ -220,6 +222,7 @@ export function AppShell({
             </DialogTrigger>
             <DialogContent title={user.name} description={user.role}>
               <div className="mt-5 flex flex-col gap-3">
+                <DesignSwitcher className="w-full" />
                 <ThemeSwitcher />
                 <LocaleSwitcher className="w-full" />
                 <form action={logout}>
@@ -235,7 +238,7 @@ export function AppShell({
       </header>
 
       {/* ---------- Content: pushed by the sidebar, never covered ---------- */}
-      <main className="mx-auto w-full max-w-[1400px] px-4 pt-5 pb-44 [transition:padding_.55s_var(--ease-spring-soft)] md:pr-6 md:pb-10 md:pl-[calc(var(--sb-w)+1.75rem)] md:pt-6">
+      <main className="w-full px-4 pt-5 pb-44 [transition:padding_.55s_var(--ease-spring-soft)] md:pr-6 md:pb-10 md:pl-[calc(var(--sb-w)+1.75rem)] md:pt-6">
         {children}
       </main>
 
@@ -247,7 +250,7 @@ export function AppShell({
       {/* ---------- Phone tab bar (thumb zone) ---------- */}
       {tabs.length > 0 && (
         <nav
-          className="glass glass-strong fixed inset-x-3 bottom-[calc(0.5rem+env(safe-area-inset-bottom))] z-40 flex h-16 items-stretch rounded-2xl p-1.5 md:hidden"
+          className="glass glass-strong liquid-bar fixed inset-x-3 bottom-[calc(0.5rem+env(safe-area-inset-bottom))] z-40 flex h-16 items-stretch rounded-2xl p-1.5 md:hidden"
           aria-label={t("tabs")}
         >
           {tabs.map((tab) => {

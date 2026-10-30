@@ -400,6 +400,11 @@
       "OTHER": "Boshqa"
     }
   },
+  "design": {
+    "label": "Dizayn",
+    "glass": "Shisha",
+    "tactile": "Skevomorfizm"
+  },
   "theme": {
     "label": "Mavzu",
     "system": "Tizim boʻyicha",

@@ -400,6 +400,11 @@
       "OTHER": "Other"
     }
   },
+  "design": {
+    "label": "Design",
+    "glass": "Glass",
+    "tactile": "Skeuomorphic"
+  },
   "theme": {
     "label": "Theme",
     "system": "System",

@@ -20,9 +20,9 @@ export function OfficeMiniMap({ imageUrl, zones, timezone }: Props) {
   const time = (iso: string | null) => (iso ? format.dateTime(new Date(iso), { hour: "2-digit", minute: "2-digit", timeZone: timezone }) : "—");
 
   return (
-    <div className="relative select-none" data-testid="mini-map">
+    <div data-plan-frame className="relative select-none" data-testid="mini-map">
       {/* eslint-disable-next-line @next/next/no-img-element -- plain image: served from our API with auth */}
-      <img src={imageUrl} alt={t("officePlan.title")} className="block h-auto w-full rounded-xl border border-border/70 bg-white dark:brightness-[.86] dark:contrast-[.95]" draggable={false} />
+      <img data-plan-image src={imageUrl} alt={t("officePlan.title")} className="block h-auto w-full rounded-xl border border-border/70 bg-white dark:brightness-[.86] dark:contrast-[.95]" draggable={false} />
       <div className="absolute inset-0">
         {zones.map((z) => (
           <div

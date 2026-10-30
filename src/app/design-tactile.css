@@ -1,0 +1,242 @@
+/*
+ * Second design: skeuomorphism. The pages are the same, only materials change.
+ * Unlayered on purpose: it beats the Tailwind layers without !important.
+ * Scans are blended on the element itself: mix-blend-mode on big layers drops scrolling to ~1 fps.
+ */
+html[data-design="tactile"] {
+  --tex-aluminium: image-set(url("/textures/brushed-aluminium.avif") type("image/avif"), url("/textures/brushed-aluminium.webp") type("image/webp"));
+  --tex-steel: image-set(url("/textures/powder-steel.avif") type("image/avif"), url("/textures/powder-steel.webp") type("image/webp"));
+  --tex-paper: image-set(url("/textures/paper.avif") type("image/avif"), url("/textures/paper.webp") type("image/webp"));
+  --tex-leather: image-set(url("/textures/leather.avif") type("image/avif"), url("/textures/leather.webp") type("image/webp"));
+  --tex-walnut: image-set(url("/textures/walnut.avif") type("image/avif"), url("/textures/walnut.webp") type("image/webp"));
+  --brass: #a98a55;
+  --brass-ink: #2a2110;
+  --brass-ring: rgb(169 138 85 / 70%);
+
+  --radius: 0.625rem;
+  --background: #c4c5c3;
+  --foreground: #141619;
+  --card: #e4e1d9;
+  --card-foreground: #141619;
+  --popover: #ece9e2;
+  --popover-foreground: #141619;
+  --primary: #1f5a43;
+  --primary-foreground: #e4f7ee;
+  --secondary: #ece9e2;
+  --secondary-foreground: #141619;
+  --muted: #d9d5cb;
+  --muted-foreground: #3e434a;
+  --accent: #d3cfc5;
+  --accent-foreground: #141619;
+  --destructive: #8f1e2a;
+  --border: #bdb8ac;
+  --input: #a8a398;
+  --ring: #1f5a43;
+  --slot: #d3cfc5;
+  --bar: #b4b7b9;
+  --sig-in: #0e6a48;
+  --sig-out: #7a5510;
+  --sig-off: #4f545b;
+  --sig-late: #8f1e2a;
+  --sig-info: #1d4c79;
+  --sig-violet: #4f3f8f;
+  --surface: var(--card);
+  --glass-hi: rgb(255 255 255 / 65%);
+  --depth-panel: inset 0 1px 0 0 rgb(255 255 255 / 65%), 0 1px 1px 0 rgb(17 19 21 / 14%), 0 10px 26px -10px rgb(17 19 21 / 28%);
+  --depth-slot: inset 0 1px 3px 0 rgb(20 22 25 / 22%), 0 1px 0 0 rgb(255 255 255 / 55%);
+  --depth-bar: inset 0 1px 0 0 rgb(255 255 255 / 55%), 0 1px 0 0 rgb(17 19 21 / 25%), 0 8px 22px -12px rgb(17 19 21 / 40%);
+  --depth-key: inset 0 1px 0 rgb(255 255 255 / 22%), 0 0 0 1px rgb(20 22 25 / 8%), 0 1px 0 rgb(0 0 0 / 28%), 0 3px 7px -2px rgb(0 0 0 / 28%);
+  --depth-pressed: inset 0 1px 2px rgb(0 0 0 / 35%), 0 0 0 1px rgb(20 22 25 / 8%);
+}
+html[data-design="tactile"].dark {
+  --background: #0b0c0e;
+  --foreground: #e6e2da;
+  --card: #16191d;
+  --card-foreground: #e6e2da;
+  --popover: #1d2126;
+  --popover-foreground: #e6e2da;
+  --primary: #1f5a43;
+  --primary-foreground: #e4f7ee;
+  --secondary: #1d2126;
+  --secondary-foreground: #e6e2da;
+  --muted: #1d2126;
+  --muted-foreground: #a2a7ae;
+  --accent: #262b31;
+  --accent-foreground: #e6e2da;
+  --destructive: #ec5f6b;
+  --border: #262b31;
+  --input: #3a4048;
+  --ring: #3fc38f;
+  --slot: #0c0e10;
+  --bar: #24282d;
+  --sig-in: #3fc38f;
+  --sig-out: #e0a943;
+  --sig-off: #7d838c;
+  --sig-late: #ec5f6b;
+  --sig-info: #62a3e0;
+  --sig-violet: #a99be6;
+  --glass-hi: rgb(255 255 255 / 6%);
+  --depth-panel: inset 0 1px 0 0 rgb(255 255 255 / 6%), 0 1px 1px 0 rgb(0 0 0 / 50%), 0 10px 28px -8px rgb(0 0 0 / 55%);
+  --depth-slot: inset 0 1px 3px 0 rgb(0 0 0 / 65%), 0 1px 0 0 rgb(255 255 255 / 4%);
+  --depth-bar: inset 0 1px 0 0 rgb(255 255 255 / 10%), 0 1px 0 0 rgb(0 0 0 / 60%), 0 8px 24px -10px rgb(0 0 0 / 70%);
+  --depth-key: inset 0 1px 0 rgb(255 255 255 / 10%), 0 0 0 1px rgb(255 255 255 / 6%), 0 1px 0 rgb(0 0 0 / 40%), 0 3px 7px -2px rgb(0 0 0 / 35%);
+  --depth-pressed: inset 0 1px 2px rgb(0 0 0 / 40%), 0 0 0 1px rgb(255 255 255 / 6%);
+}
+
+/* The dark-theme primary is a button colour, too dark for text on the dark panels. */
+html[data-design="tactile"].dark .text-primary {
+  color: var(--sig-in);
+}
+
+/* Fonts: Plex is downloaded only when this design is on. */
+html[data-design="tactile"] body {
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
+}
+html[data-design="tactile"] .nums {
+  font-family: var(--font-mono), monospace;
+}
+
+/* Page: powder-coated steel instead of the blurred photo. */
+html[data-design="tactile"] .app-backdrop {
+  background: var(--tex-steel) 0 0 / 420px, var(--background);
+  background-blend-mode: soft-light;
+  filter: none;
+  transform: none;
+}
+html[data-design="tactile"] .app-backdrop::after {
+  content: none;
+}
+
+/* Panels: paper. */
+html[data-design="tactile"] .surface,
+html[data-design="tactile"] .glass,
+html[data-design="tactile"] .glass-overlay {
+  background: var(--tex-paper) 0 0 / 512px, var(--card);
+  background-blend-mode: soft-light;
+  border-color: transparent;
+  box-shadow: var(--depth-panel);
+  backdrop-filter: none;
+}
+html[data-design="tactile"] .glass::before,
+html[data-design="tactile"] .glass::after {
+  content: none;
+}
+
+/* Sidebar and phone bars: brushed aluminium. */
+html[data-design="tactile"] aside.glass,
+html[data-design="tactile"] header.glass,
+html[data-design="tactile"] nav.glass {
+  background: var(--tex-aluminium) 0 0 / 640px, var(--bar);
+  background-blend-mode: overlay;
+  border-radius: 0.875rem;
+  box-shadow: var(--depth-bar);
+}
+
+/* Recessed slots: fields, tracks, search. */
+html[data-design="tactile"] .inset-well {
+  background-color: var(--slot);
+  box-shadow: var(--depth-slot);
+}
+/* On the dark page a slot is as dark as the page itself, so it needs a visible edge. */
+html[data-design="tactile"].dark .inset-well.border-transparent {
+  border-color: var(--input);
+}
+html[data-design="tactile"] .inset-well:focus-visible {
+  background-color: var(--slot);
+}
+
+/* Sliding pills: the active menu item sits in a slot, the segmented runner is a key. */
+html[data-design="tactile"] .lens {
+  backdrop-filter: none;
+}
+html[data-design="tactile"] nav .lens {
+  background: var(--slot);
+  box-shadow: var(--depth-slot);
+}
+html[data-design="tactile"] [role="radiogroup"] .lens {
+  background: var(--secondary);
+  box-shadow: var(--depth-key);
+}
+
+/* Buttons: physical keys. */
+html[data-design="tactile"] [data-slot="button"][data-variant="default"] {
+  background-image: none;
+  box-shadow: var(--depth-key);
+}
+html[data-design="tactile"] [data-slot="button"][data-variant="outline"],
+html[data-design="tactile"] [data-slot="button"][data-variant="glass"] {
+  background: var(--secondary);
+  border-color: transparent;
+  box-shadow: var(--depth-key);
+}
+html[data-design="tactile"] [data-slot="button"][data-variant="default"]:active,
+html[data-design="tactile"] [data-slot="button"][data-variant="outline"]:active,
+html[data-design="tactile"] [data-slot="button"][data-variant="glass"]:active {
+  box-shadow: var(--depth-pressed);
+}
+
+/* Badges: an indicator in a slot, its dot is a lamp. */
+html[data-design="tactile"] [data-slot="badge"] {
+  background-color: var(--slot);
+  border-radius: 0.375rem;
+  box-shadow: var(--depth-slot);
+}
+html[data-design="tactile"] [data-slot="badge"] > .bg-current {
+  animation: none;
+  box-shadow: 0 0 0 1.5px var(--brass-ring), 0 0 7px 0 currentColor;
+}
+
+/* Brass name plate. */
+html[data-design="tactile"] [data-plate] {
+  padding: 3px 9px;
+  border-radius: 3px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--brass-ink);
+  text-shadow: 0 1px 0 rgb(255 255 255 / 28%);
+  background: var(--tex-aluminium) 0 0 / 420px, var(--brass);
+  background-blend-mode: overlay;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 40%), inset 0 -1px 0 rgb(42 33 16 / 30%), 0 1px 2px rgb(0 0 0 / 35%);
+}
+
+/* The plan: a drawing in a walnut frame. A border, not padding: overlays still match the picture inside. */
+html[data-design="tactile"] [data-plan-frame] {
+  padding: 0;
+  border: 5px solid transparent;
+  border-radius: 7px;
+  background: var(--tex-walnut) 0 0 / 520px border-box;
+  background-blend-mode: normal;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 35%);
+}
+html[data-design="tactile"] [data-plan-frame] > .bg-white,
+html[data-design="tactile"] [data-plan-frame].bg-white {
+  background: transparent;
+  border-radius: 3px;
+}
+html[data-design="tactile"] [data-plan-image] {
+  border: 0;
+  border-radius: 3px;
+  filter: sepia(0.12) brightness(0.96);
+}
+/* A light drawing: in the dark theme it is shown as a negative with the original hues. */
+html[data-design="tactile"].dark [data-plan-image] {
+  filter: invert(0.88) hue-rotate(180deg);
+}
+
+/* Login card: leather, always dark, so it keeps its own colours in both themes. */
+html[data-design="tactile"] [data-leather] {
+  --foreground: #f4efe5;
+  --muted-foreground: #cfc8ba;
+  --slot: rgb(0 0 0 / 42%);
+  --depth-slot: inset 0 1px 3px 0 rgb(0 0 0 / 65%), 0 1px 0 0 rgb(255 255 255 / 8%);
+  --input: rgb(255 255 255 / 14%);
+  --destructive: #f2919a;
+  color: var(--foreground);
+  background: var(--tex-leather) 0 0 / 460px, #2a2320;
+  background-blend-mode: normal;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 10%), inset 0 -1px 0 rgb(0 0 0 / 50%), 0 2px 3px rgb(0 0 0 / 40%), 0 22px 48px -18px rgb(0 0 0 / 65%);
+}
+html[data-design="tactile"] [data-leather] .inset-well {
+  border-color: var(--input);
+}

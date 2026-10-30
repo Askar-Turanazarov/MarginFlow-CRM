@@ -115,6 +115,7 @@ The demo data also has 20 desks (13 occupied), 3 zones, 7 clients (California an
 - Secrets (passwords, keys, `DATABASE_URL`, `AUTH_SECRET`) live only in `.env`, which is not committed. Only `.env.example` is in Git.
 - `dev` and `build` use Turbopack: webpack does not accept the `!` character in the project path.
 - Documentation: [docs/PRD.md](docs/PRD.md) (product), [docs/SPEC.md](docs/SPEC.md) (data, pages, rules).
+- Two interface designs: glass (default) and skeuomorphic. The switch is in the sidebar, the phone account menu and on the login page. Textures are CC0 from ambientCG.
 
 ---
 
@@ -229,6 +230,7 @@ Demo maʼlumotlarda yana 20 ta ish joyi (13 tasi band), 3 ta zona, 7 ta mijoz (K
 - Maxfiy maʼlumotlar (parollar, kalitlar, `DATABASE_URL`, `AUTH_SECRET`) faqat `.env` da saqlanadi va Git’ga tushmaydi. Git’da faqat `.env.example` bor.
 - `dev` va `build` Turbopack orqali ishlaydi: webpack loyiha yoʻlidagi `!` belgisini qabul qilmaydi.
 - Hujjatlar: [docs/PRD.md](docs/PRD.md) (mahsulot), [docs/SPEC.md](docs/SPEC.md) (maʼlumotlar, sahifalar, qoidalar).
+- Ikki dizayn: shisha (standart) va skevomorfizm. Almashtirgich yon panelda, telefondagi akkaunt menyusida va kirish sahifasida. Teksturalar ambientCG dan, CC0 litsenziyasi.
 
 ---
 
@@ -343,3 +345,4 @@ npm run db:stop
 - Секреты (пароли, ключи, `DATABASE_URL`, `AUTH_SECRET`) хранятся только в `.env`, который не попадает в Git. В Git есть только `.env.example`.
 - `dev` и `build` работают через Turbopack: webpack не принимает символ `!` в пути проекта.
 - Документация: [docs/PRD.md](docs/PRD.md) (продукт), [docs/SPEC.md](docs/SPEC.md) (данные, страницы, правила).
+- Два дизайна интерфейса: стекло (по умолчанию) и скевоморфизм. Переключатель — в боковой панели, в меню аккаунта на телефоне и на странице входа. Текстуры — CC0 с ambientCG.

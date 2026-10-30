@@ -5,6 +5,7 @@ import { BrandMark } from "@/components/app-shell";
 import { LocaleSwitcher } from "@/components/locale-switcher";
 import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+import { DesignSwitcher } from "@/components/ui/design-switcher";
 import { ThemeSwitcher } from "@/components/ui/theme-switcher";
 import { redirect } from "@/i18n/navigation";
 import { DEV_LOGIN_ENABLED, isLocalHost } from "@/lib/dev-login";
@@ -35,17 +36,20 @@ export default async function LoginPage({ params }: { params: Promise<{ locale: 
       : [];
 
   return (
-    <main className="relative flex min-h-dvh flex-col items-center justify-center gap-5 px-4 py-10">
-      <div className="absolute top-4 right-4 flex items-center gap-2">
-        <LocaleSwitcher />
-        <ThemeSwitcher compact />
+    <main className="relative flex min-h-dvh flex-col items-center justify-center gap-5 px-4 pt-28 pb-10 sm:py-10">
+      <div className="absolute top-4 right-4 flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+        <DesignSwitcher />
+        <div className="flex items-center gap-2">
+          <LocaleSwitcher />
+          <ThemeSwitcher compact />
+        </div>
       </div>
 
-      <section className="glass-strong w-full max-w-[400px] animate-rise rounded-[2rem] p-7 sm:p-9">
+      <section data-leather className="glass-strong w-full max-w-[400px] animate-rise rounded-[2rem] p-7 sm:p-9">
         <div className="mb-7 flex items-center gap-3">
           <BrandMark />
           <div>
-            <div className="font-semibold tracking-[-0.01em]">{app("name")}</div>
+            <div data-plate className="w-fit font-semibold tracking-[-0.01em]">{app("name")}</div>
             <div className="text-xs text-muted-foreground">{app("tagline")}</div>
           </div>
         </div>

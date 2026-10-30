@@ -52,9 +52,9 @@ export async function CheckInScreen({ user, settings }: { user: CurrentUser; set
               {desk ? [desk.code, desk.pcNumber && t("attendance.pc", { pc: desk.pcNumber })].filter(Boolean).join(" · ") : t("dashboard.noDesk")}
             </div>
             {desk && (
-              <div className="relative overflow-hidden rounded-xl border border-border/70 bg-white dark:brightness-[.86]">
+              <div data-plan-frame className="relative overflow-hidden rounded-xl border border-border/70 bg-white dark:brightness-[.86]">
                 {/* eslint-disable-next-line @next/next/no-img-element -- plan image comes from our own API */}
-                <img src={plan.url} alt={t("officePlan.title")} className="block h-auto w-full" />
+                <img data-plan-image src={plan.url} alt={t("officePlan.title")} className="block h-auto w-full" />
                 <span
                   className="absolute flex size-5 -translate-x-1/2 -translate-y-1/2 animate-breathe rounded-full border-2 border-white bg-primary text-primary"
                   style={{ left: `${desk.x * 100}%`, top: `${desk.y * 100}%` }}

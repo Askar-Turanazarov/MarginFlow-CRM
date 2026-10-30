@@ -217,7 +217,7 @@ export function OfficePlanEditor({ desks, zones, employees, imageUrl, isTestPlan
     ) : null;
 
   return (
-    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_400px] min-[2200px]:grid-cols-[minmax(0,1fr)_520px]">
       <div className="grid min-w-0 gap-3">
         {canEdit && (
           <div className="flex flex-wrap items-center gap-2" role="toolbar">
@@ -252,10 +252,11 @@ export function OfficePlanEditor({ desks, zones, employees, imageUrl, isTestPlan
         </AnimatePresence>
 
         {/* Everything on top of the image is positioned in % of its size, so it scales with the picture. */}
-        <div className="glass rounded-[1.4rem] p-1.5">
+        <div data-plan-frame className="glass mx-auto w-full max-w-[max(640px,calc((100dvh-16rem)*1.5))] rounded-[1.4rem] p-1.5">
           <div className="relative isolate overflow-hidden rounded-2xl bg-white select-none">
             {/* eslint-disable-next-line @next/next/no-img-element -- plain image: served from our API with auth */}
             <img
+              data-plan-image
               src={imageUrl}
               alt={t("officePlan.title")}
               className="block h-auto w-full dark:brightness-[.86] dark:contrast-[.95]"
