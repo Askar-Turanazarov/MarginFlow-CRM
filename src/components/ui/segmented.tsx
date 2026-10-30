@@ -50,7 +50,7 @@ export function Segmented<T extends string>({
                 className="lens absolute inset-0 rounded-[9px] bg-card shadow-[0_1px_2px_rgb(0_0_0/.1),0_2px_6px_-2px_rgb(0_0_0/.12),inset_0_1px_0_var(--glass-hi)]"
               />
             )}
-            <span className="relative flex items-center gap-1.5 [&_svg]:size-3.5">
+            <span className="relative flex items-center gap-1.5 xl:whitespace-nowrap [&_svg]:size-3.5">
               {o.icon}
               {o.label}
             </span>

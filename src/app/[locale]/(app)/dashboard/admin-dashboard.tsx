@@ -118,7 +118,7 @@ export function AdminDashboard({ initial, imageUrl, zones, timezone }: Props) {
         })}
       </div>
 
-      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_360px]">
+      <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,min(max(640px,calc((100dvh-22rem)*1.5+3rem)),calc(100%-340px-1rem)))_minmax(340px,1fr)]">
         <Reveal index={5}>
           <Card>
             <CardHeader>
@@ -140,14 +140,14 @@ export function AdminDashboard({ initial, imageUrl, zones, timezone }: Props) {
         </Reveal>
 
         <Reveal index={6}>
-          <Card className="lg:max-h-[640px]">
+          <Card className="lg:max-h-[max(560px,calc(100dvh-16rem))]">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 {t("feedTitle")}
                 <LiveDot label={t("live")} />
               </CardTitle>
             </CardHeader>
-            <CardContent className="overscroll-contain lg:max-h-[560px] lg:overflow-y-auto">
+            <CardContent className="overscroll-contain lg:max-h-[max(480px,calc(100dvh-21rem))] lg:overflow-y-auto">
               {data.feed.length === 0 ? (
                 <p className="text-sm text-muted-foreground">{t("feed.empty")}</p>
               ) : (

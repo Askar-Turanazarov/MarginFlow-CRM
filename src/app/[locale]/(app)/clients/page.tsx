@@ -72,7 +72,7 @@ export default async function ClientsPage({ searchParams }: { searchParams: Prom
       <SearchField placeholder={t("clients.search")} defaultValue={q} />
 
       <Reveal index={1}>
-        <div className="glass h-72 overflow-hidden rounded-2xl p-1.5 sm:h-80">
+        <div className="glass h-72 overflow-hidden rounded-2xl p-1.5 sm:h-[clamp(320px,38dvh,560px)]">
           <div className="isolate h-full overflow-hidden rounded-[0.875rem]">
             <ClientsMap points={points} />
           </div>

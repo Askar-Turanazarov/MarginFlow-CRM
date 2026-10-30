@@ -35,7 +35,7 @@ export function EmployeeForm({ id, initial, desks, roleLocked }: Props) {
 
   // `key` remounts the form after a failed attempt so the entered values come back (React resets forms after actions).
   return (
-    <form key={state.attempt ?? 0} action={action} className="surface grid max-w-2xl gap-7 rounded-2xl p-5 sm:p-7">
+    <form key={state.attempt ?? 0} action={action} className="surface grid max-w-3xl gap-7 rounded-2xl p-5 sm:p-7">
       {id && <input type="hidden" name="id" value={id} />}
 
       <FormSection title={t("form.sectionPerson")}>

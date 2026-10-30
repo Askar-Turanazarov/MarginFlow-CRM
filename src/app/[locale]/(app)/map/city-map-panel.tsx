@@ -57,7 +57,7 @@ export function CityMapPanel({ isAdmin, office, clients, cities, timezone }: Pro
   const shown = city ? peopleIn(city) : people;
 
   return (
-    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px]">
+    <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_320px] 2xl:grid-cols-[minmax(0,1fr)_400px] min-[2200px]:grid-cols-[minmax(0,1fr)_520px]">
       <div className="grid gap-3">
         <div className="flex flex-wrap items-center gap-2">
           {/* City switcher: only when the points are in different cities. */}
@@ -109,7 +109,7 @@ export function CityMapPanel({ isAdmin, office, clients, cities, timezone }: Pro
           {t("map.hint")}
         </p>
         <div className="glass rounded-[1.4rem] p-1.5">
-          <div className="relative isolate h-[560px] overflow-hidden rounded-2xl max-sm:h-[62vh]" data-testid="city-map">
+          <div className="relative isolate h-[max(480px,calc(100dvh-15rem))] overflow-hidden rounded-2xl max-sm:h-[62vh]" data-testid="city-map">
             <CityMap
               bounds={city?.bounds}
               office={office}

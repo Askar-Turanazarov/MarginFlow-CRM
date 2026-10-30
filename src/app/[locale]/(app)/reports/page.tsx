@@ -17,7 +17,7 @@ export default async function ReportsPage() {
   const today = formatInTimeZone(new Date(), timezone, "yyyy-MM-dd");
 
   return (
-    <div className="grid max-w-2xl gap-5">
+    <div className="grid max-w-3xl gap-5">
       <PageHeader title={t("title")} />
       <Reveal index={1}>
         <section className="surface rounded-2xl p-5 sm:p-7">

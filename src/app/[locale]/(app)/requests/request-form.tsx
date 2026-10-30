@@ -32,7 +32,7 @@ export function RequestForm({ id, initial, clients, employees }: Props) {
   const invalid = (field: RequestField) => (state.fieldErrors?.[field] ? true : undefined);
 
   return (
-    <form key={state.attempt ?? 0} action={action} className="surface grid max-w-2xl gap-7 rounded-2xl p-5 sm:p-7">
+    <form key={state.attempt ?? 0} action={action} className="surface grid max-w-3xl gap-7 rounded-2xl p-5 sm:p-7">
       {id && <input type="hidden" name="id" value={id} />}
 
       <FormSection title={t("requestForm.sectionWhat")}>
