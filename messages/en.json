@@ -429,6 +429,46 @@
     "people": "People",
     "clients": "Clients",
     "requests": "Requests",
-    "language": "Language"
+    "language": "Language",
+    "track": "Follow: {name}"
+  },
+  "tracking": {
+    "title": "Turn on tracking",
+    "explain": "Your position is sent every 10 seconds until you end work. Your manager sees it on the map. The browser will ask for permission.",
+    "enable": "Turn on tracking",
+    "disable": "Turn off",
+    "waiting": "Looking for your position…",
+    "active": "Tracking is on",
+    "accuracy": "Accuracy: {meters} m",
+    "sentAgo": "sent {seconds} s ago",
+    "keepOpen": "Do not close this page, otherwise the browser stops geolocation.",
+    "problem": {
+      "denied": "Geolocation is blocked. Allow it for this site in the browser settings.",
+      "unavailable": "Could not get your position. Check that geolocation is on."
+    }
+  },
+  "track": {
+    "title": "Tracking: {name}",
+    "listTitle": "Phone tracking",
+    "follow": "Follow",
+    "checkInPoint": "Check-in",
+    "noPoints": "No positions yet today",
+    "neverUpdated": "No data",
+    "updatedAgo": "updated {seconds} s ago",
+    "stale": "No new positions for over a minute: the phone may be locked or the page closed.",
+    "distance": "Distance",
+    "speed": "Speed",
+    "checkIn": "Check-in",
+    "km": "{value} km",
+    "kmh": "{value} km/h",
+    "accuracy": "Accuracy: {meters} m",
+    "events": "Day events",
+    "noEvents": "No marks yet today.",
+    "event": {
+      "CHECK_IN": "Check-in",
+      "EXIT": "Went out",
+      "RETURN": "Returned",
+      "END_OF_DAY": "End of work"
+    }
   }
 }

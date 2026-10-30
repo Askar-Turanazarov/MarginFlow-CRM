@@ -8,6 +8,7 @@ import { requireUser } from "@/lib/session";
 import { CheckInScreen } from "./_attendance/check-in-screen";
 import { QuickDayAction, ShareLocationWhileOut } from "./_attendance/day-controls";
 import { getDayData } from "./_attendance/day-data";
+import { PhoneTracking } from "./_attendance/phone-tracking";
 
 // Depends on the session cookie: never prerender.
 export const dynamic = "force-dynamic";
@@ -48,7 +49,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         simulationLabel={simulation ? t("simulation.badge") : undefined}
         day={day.state.open ? <QuickDayAction state={day.state} requests={day.requests} /> : undefined}
       >
-        <ShareLocationWhileOut out={day.state.open && day.state.status === "OUT_OF_OFFICE"} />
+        {user.employee.trackByPhone ? (
+          day.state.open && <PhoneTracking />
+        ) : (
+          <ShareLocationWhileOut out={day.state.open && day.state.status === "OUT_OF_OFFICE"} />
+        )}
         {mustCheckIn ? <CheckInScreen user={user} settings={settings} /> : children}
       </AppShell>
     </QueryProvider>

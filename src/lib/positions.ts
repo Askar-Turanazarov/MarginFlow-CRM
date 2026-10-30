@@ -2,6 +2,7 @@ import type { LocationSource } from "@prisma/client";
 import { z } from "zod";
 import { getOfficeSettings, officeDayDate } from "@/lib/attendance";
 import { prisma } from "@/lib/prisma";
+import { phoneMinIntervalMs } from "@/lib/track-math";
 
 // The single place where every position arrives: the movement simulator, office sensors and phone geolocation.
 // Rules (CLAUDE.md "Положение сотрудника"): positions are kept only between check-in and "End of work";
@@ -30,7 +31,7 @@ export const positionSchema = z
 export const positionsBodySchema = z.object({ positions: z.array(positionSchema).min(1).max(500) });
 
 export type PositionInput = z.infer<typeof positionSchema> & { employeeId: string };
-export type RejectReason = "unknownEmployee" | "offDuty" | "notInOffice" | "badTime";
+export type RejectReason = "unknownEmployee" | "offDuty" | "notInOffice" | "badTime" | "too_often";
 export type IngestResult = { accepted: number; rejected: { employeeId: string; reason: RejectReason }[] };
 
 export async function ingestPositions(source: LocationSource, positions: PositionInput[]): Promise<IngestResult> {
@@ -40,11 +41,25 @@ export async function ingestPositions(source: LocationSource, positions: Positio
 
   const employees = await prisma.employee.findMany({
     where: { id: { in: [...new Set(positions.map((p) => p.employeeId))] } },
-    select: { id: true, status: true, workDays: { where: { date }, select: { id: true, checkInAt: true, closed: true } } },
+    select: {
+      id: true,
+      status: true,
+      trackByPhone: true,
+      workDays: {
+        where: { date },
+        select: {
+          id: true,
+          checkInAt: true,
+          closed: true,
+          locations: { where: { source }, orderBy: { at: "desc" }, take: 1, select: { at: true } },
+        },
+      },
+    },
   });
   const byId = new Map(employees.map((e) => [e.id, e]));
 
   const result: IngestResult = { accepted: 0, rejected: [] };
+  const lastPoint = new Map(employees.map((e) => [e.id, e.workDays[0]?.locations[0]?.at]));
   const planUpdates = new Map<string, { x: number; y: number; at: Date }>();
   const geoPoints: { workDayId: string; lat: number; lng: number; accuracy: number; source: LocationSource; at: Date }[] = [];
 
@@ -69,6 +84,16 @@ export async function ingestPositions(source: LocationSource, positions: Positio
     if (p.office && employee.status !== "IN_OFFICE") {
       reject("notInOffice");
       continue;
+    }
+
+    // A phone reports at a set pace (tracked people every 10 s, others once a minute): anything faster is refused.
+    if (source === "PHONE" && p.geo) {
+      const previous = lastPoint.get(employee.id);
+      if (previous && Math.abs(at.getTime() - previous.getTime()) < phoneMinIntervalMs(employee.trackByPhone)) {
+        reject("too_often");
+        continue;
+      }
+      lastPoint.set(employee.id, at);
     }
 
     if (p.office) planUpdates.set(employee.id, { ...p.office, at });

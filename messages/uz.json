@@ -429,6 +429,46 @@
     "people": "Xodimlar",
     "clients": "Mijozlar",
     "requests": "Arizalar",
-    "language": "Til"
+    "language": "Til",
+    "track": "Kuzatish: {name}"
+  },
+  "tracking": {
+    "title": "Kuzatishni yoqish",
+    "explain": "Joylashuvingiz ishni tugatguningizcha har 10 soniyada yuboriladi. Uni rahbar xaritada koʻradi. Brauzer ruxsat soʻraydi.",
+    "enable": "Kuzatishni yoqish",
+    "disable": "Oʻchirish",
+    "waiting": "Joylashuv aniqlanmoqda…",
+    "active": "Kuzatish yoqilgan",
+    "accuracy": "Aniqlik: {meters} m",
+    "sentAgo": "{seconds} s oldin yuborildi",
+    "keepOpen": "Sahifani yopmang, aks holda brauzer geolokatsiyani toʻxtatadi.",
+    "problem": {
+      "denied": "Geolokatsiya taqiqlangan. Brauzer sozlamalarida bu sayt uchun ruxsat bering.",
+      "unavailable": "Joylashuvni aniqlab boʻlmadi. Geolokatsiya yoqilganini tekshiring."
+    }
+  },
+  "track": {
+    "title": "Kuzatish: {name}",
+    "listTitle": "Telefon orqali kuzatish",
+    "follow": "Kuzatish",
+    "checkInPoint": "Kelish",
+    "noPoints": "Bugun hali nuqtalar yoʻq",
+    "neverUpdated": "Maʼlumot yoʻq",
+    "updatedAgo": "{seconds} s oldin yangilandi",
+    "stale": "Bir daqiqadan koʻproq yangi nuqta yoʻq: telefon qulflangan yoki sahifa yopilgan boʻlishi mumkin.",
+    "distance": "Yoʻl",
+    "speed": "Tezlik",
+    "checkIn": "Kelish",
+    "km": "{value} km",
+    "kmh": "{value} km/soat",
+    "accuracy": "Aniqlik: {meters} m",
+    "events": "Kun voqealari",
+    "noEvents": "Bugun hali belgilar yoʻq.",
+    "event": {
+      "CHECK_IN": "Kelish",
+      "EXIT": "Chiqish",
+      "RETURN": "Qaytish",
+      "END_OF_DAY": "Ish tugashi"
+    }
   }
 }
