@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
-import { DEV_LOGIN_ENABLED } from "@/lib/dev-login";
+import { DEV_LOGIN_ENABLED, isLocalHost } from "@/lib/dev-login";
 import { prisma } from "@/lib/prisma";
 
 const credentialsSchema = z.object({
@@ -39,7 +39,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           Credentials({
             id: "dev-login",
             credentials: { login: {} },
-            async authorize(raw) {
+            async authorize(raw, request) {
+              // This provider answers on /api/auth/callback/dev-login too: without this check a tunnel would let anyone in.
+              if (!isLocalHost(request.headers.get("host"))) return null;
               const login = z.string().trim().toLowerCase().min(1).safeParse(raw?.login);
               if (!login.success) return null;
               const user = await prisma.user.findUnique({ where: { login: login.data }, include: { employee: true } });
